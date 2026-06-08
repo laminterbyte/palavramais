@@ -3,32 +3,1394 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Estudos - Palavra Mais</title>
-    <!-- Incluir o mesmo estilo do index -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Particifra - Gestão de Louvores e Partituras</title>
+    <!-- Tailwind CSS para Estilização de Alto Nível -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts para Tipografia Elegante -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Mono:wght@400;700&family=Cinzel:wght@600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome para Ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Dexie.js para IndexedDB Banco de Dados Local -->
+    <script src="https://unpkg.com/dexie@3.2.4/dist/dexie.js"></script>
+
     <style>
-        /* Mesmos estilos do index, mas com conteúdo específico para estudos */
+        body {
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .title-gothic {
+            font-family: 'Cinzel', serif;
+        }
+        .chords-font {
+            font-family: 'Fira Mono', monospace;
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* CONFIGURAÇÃO EXTRA DE MODO ESCURO GLOBAL (GLOBAL DARK MODE) */
+        body.dark-theme {
+            background-color: #0f172a !important; /* slate-900 */
+            color: #cbd5e1 !important; /* slate-300 */
+        }
+        body.dark-theme nav {
+            background-color: #020617 !important; /* slate-950 */
+            border-bottom: 1px solid #1e293b;
+        }
+        body.dark-theme .bg-white {
+            background-color: #1e293b !important; /* slate-800 */
+            color: #f1f5f9 !important;
+            border-color: #334155 !important;
+        }
+        body.dark-theme .text-slate-900,
+        body.dark-theme .text-slate-800,
+        body.dark-theme .text-slate-700 {
+            color: #f1f5f9 !important;
+        }
+        body.dark-theme .text-slate-500,
+        body.dark-theme .text-slate-400 {
+            color: #94a3b8 !important;
+        }
+        body.dark-theme .bg-slate-50 {
+            background-color: #0f172a !important;
+        }
+        body.dark-theme .border,
+        body.dark-theme .border-slate-100,
+        body.dark-theme .border-slate-150,
+        body.dark-theme .border-slate-200 {
+            border-color: #334155 !important;
+        }
+        body.dark-theme input,
+        body.dark-theme textarea,
+        body.dark-theme select {
+            background-color: #0f172a !important;
+            color: #f1f5f9 !important;
+            border-color: #334155 !important;
+        }
+        body.dark-theme input::placeholder,
+        body.dark-theme textarea::placeholder {
+            color: #64748b !important;
+        }
+        body.dark-theme .bg-amber-50\/20 {
+            background-color: rgba(245, 158, 11, 0.05) !important;
+        }
+        body.dark-theme .hover\:bg-slate-50:hover {
+            background-color: #1e293b !important;
+        }
     </style>
 </head>
-<body>
-    <!-- Mesmo header do index -->
-    <header>
-        <!-- Código igual ao do index.html -->
-    </header>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
 
-    <main>
-        <div class="container">
-            <h1>Estudos Bíblicos</h1>
-            <!-- Conteúdo específico da página de estudos -->
-            <div class="studies-list">
-                <!-- Lista de estudos -->
+    <!-- BARRA DE NAVEGAÇÃO SUPERIOR -->
+    <nav class="bg-slate-900 text-white shadow-md px-6 py-4 flex justify-between items-center z-10">
+        <div class="flex items-center space-x-3 cursor-pointer" onclick="navegarPara('home')">
+            <div class="bg-amber-500 text-slate-900 p-2 rounded-lg font-bold">
+                <i class="fa-solid fa-music text-xl"></i>
+            </div>
+            <div>
+                <span class="text-2xl font-bold tracking-wider title-gothic text-amber-400">Particifra</span>
+                <span class="block text-xs text-slate-400 font-light tracking-widest uppercase">Programação Gospel Eficiente</span>
             </div>
         </div>
+        <div class="flex items-center space-x-2 md:space-x-4">
+            <button onclick="navegarPara('cadastro')" class="nav-btn px-4 py-2 rounded-lg transition-all hover:bg-slate-800 flex items-center space-x-2 text-sm md:text-base">
+                <i class="fa-solid fa-circle-plus text-amber-500"></i>
+                <span class="hidden md:inline">Cadastrar</span>
+            </button>
+            <button onclick="navegarPara('repertorio')" class="nav-btn px-4 py-2 rounded-lg transition-all hover:bg-slate-800 flex items-center space-x-2 text-sm md:text-base">
+                <i class="fa-solid fa-folder-open text-amber-500"></i>
+                <span class="hidden md:inline">Repertório</span>
+            </button>
+            <button onclick="navegarPara('programacao')" class="nav-btn px-4 py-2 rounded-lg transition-all hover:bg-slate-800 flex items-center space-x-2 text-sm md:text-base">
+                <i class="fa-solid fa-calendar-check text-amber-500"></i>
+                <span class="hidden md:inline">Programação</span>
+            </button>
+            
+            <!-- Botão de Modo Escuro Global (Altar) -->
+            <button onclick="toggleGlobalDarkMode()" class="p-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 transition-all text-amber-400 ml-2" title="Alternar Modo Escuro Global">
+                <i id="global-theme-icon" class="fa-solid fa-moon text-lg"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- ÁREA PRINCIPAL COM TRANSIÇÃO DE TELAS -->
+    <main class="flex-grow container mx-auto max-w-6xl p-4 md:p-8">
+
+        <!-- 1. TELA INICIAL (HOME) -->
+        <section id="view-home" class="view-section space-y-8 py-10">
+            <div class="text-center space-y-3">
+                <h1 class="text-4xl md:text-6xl font-extrabold text-slate-900 tracking-tight title-gothic">Particifra</h1>
+                <p class="text-slate-500 max-w-xl mx-auto text-lg">
+                    Organize as cifras, letras e partituras de seu ministério de louvor de forma prática e eficiente.
+                </p>
+                <div class="w-24 h-1 bg-amber-500 mx-auto rounded-full mt-4"></div>
+            </div>
+
+            <!-- Grid de Módulos Rápidos -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-6">
+                <!-- Card Cadastro -->
+                <div onclick="navegarPara('cadastro')" class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 hover:border-amber-500 hover:shadow-md cursor-pointer transition-all group flex flex-col justify-between">
+                    <div class="space-y-4">
+                        <div class="w-12 h-12 rounded-xl bg-amber-500/10 text-amber-600 flex items-center justify-center text-2xl group-hover:bg-amber-500 group-hover:text-white transition-all">
+                            <i class="fa-solid fa-file-signature"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-800">Cadastrar Música</h3>
+                        <p class="text-slate-500 text-sm">Adicione novos louvores, links, letras com cifras em linha e anexe a imagem da partitura.</p>
+                    </div>
+                    <span class="text-amber-600 text-sm font-semibold inline-flex items-center mt-6 group-hover:translate-x-1 transition-transform">
+                        Acessar Cadastro <i class="fa-solid fa-arrow-right ml-2 text-xs"></i>
+                    </span>
+                </div>
+
+                <!-- Card Repertorio -->
+                <div onclick="navegarPara('repertorio')" class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 hover:border-amber-500 hover:shadow-md cursor-pointer transition-all group flex flex-col justify-between">
+                    <div class="space-y-4">
+                        <div class="w-12 h-12 rounded-xl bg-amber-500/10 text-amber-600 flex items-center justify-center text-2xl group-hover:bg-amber-500 group-hover:text-white transition-all">
+                            <i class="fa-solid fa-book-open"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-800">Repertório</h3>
+                        <p class="text-slate-500 text-sm">Consulte seu repertório em modo lista otimizada com busca instantânea e execução ágil.</p>
+                    </div>
+                    <span class="text-amber-600 text-sm font-semibold inline-flex items-center mt-6 group-hover:translate-x-1 transition-transform">
+                        Ver Repertório <i class="fa-solid fa-arrow-right ml-2 text-xs"></i>
+                    </span>
+                </div>
+
+                <!-- Card Programação -->
+                <div onclick="navegarPara('programacao')" class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 hover:border-amber-500 hover:shadow-md cursor-pointer transition-all group flex flex-col justify-between">
+                    <div class="space-y-4">
+                        <div class="w-12 h-12 rounded-xl bg-amber-500/10 text-amber-600 flex items-center justify-center text-2xl group-hover:bg-amber-500 group-hover:text-white transition-all">
+                            <i class="fa-solid fa-list-ol"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-800">Programação (Setlists)</h3>
+                        <p class="text-slate-500 text-sm">Monte e edite a programação dedicada para cultos, ensaios, organizando com filtros e buscas alfabéticas.</p>
+                    </div>
+                    <span class="text-amber-600 text-sm font-semibold inline-flex items-center mt-6 group-hover:translate-x-1 transition-transform">
+                        Ver Programações <i class="fa-solid fa-arrow-right ml-2 text-xs"></i>
+                    </span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. TELA DE CADASTRO -->
+        <section id="view-cadastro" class="view-section hidden space-y-6">
+            <div class="flex items-center justify-between border-b pb-4">
+                <div>
+                    <h2 class="text-3xl font-bold text-slate-800">Cadastrar Nova Música</h2>
+                    <p class="text-sm text-slate-500">Apenas o título é obrigatório. Os demais itens podem ser adicionados ou editados depois.</p>
+                </div>
+                <button onclick="navegarPara('home')" class="text-slate-500 hover:text-slate-800">
+                    <i class="fa-solid fa-circle-xmark text-2xl"></i>
+                </button>
+            </div>
+
+            <form id="form-cadastro" onsubmit="salvarMusica(event)" class="bg-white rounded-2xl p-6 shadow-sm border border-slate-150 grid grid-cols-1 md:grid-cols-2 gap-6">
+                <input type="hidden" id="edit-id">
+                
+                <!-- Nome / Autor -->
+                <div class="space-y-2">
+                    <label class="block text-sm font-semibold text-slate-700">Título da Música *</label>
+                    <input type="text" id="input-titulo" required class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500" placeholder="Ex: Grandioso És Tu">
+                </div>
+                
+                <div class="space-y-2">
+                    <label class="block text-sm font-semibold text-slate-700">Compositor / Ministério / Cantor (Opcional)</label>
+                    <input type="text" id="input-autor" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500" placeholder="Ex: Harpa Cristã">
+                </div>
+
+                <!-- Link de Referência de Áudio -->
+                <div class="space-y-2 md:col-span-2">
+                    <label class="block text-sm font-semibold text-slate-700">Link de Referência (YouTube, Spotify, etc. - Opcional)</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+                            <i class="fa-solid fa-link"></i>
+                        </span>
+                        <input type="url" id="input-link" class="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500" placeholder="https://www.youtube.com/watch?v=...">
+                    </div>
+                </div>
+
+                <!-- Partitura / Imagem Guia -->
+                <div class="space-y-2 md:col-span-2">
+                    <label class="block text-sm font-semibold text-slate-700">Anexo da Partitura / Guia de Acordes (Opcional)</label>
+                    <div class="border-2 border-dashed border-slate-200 rounded-xl p-4 flex flex-col items-center justify-center bg-slate-50 hover:bg-slate-100/50 transition-all cursor-pointer relative">
+                        <input type="file" id="input-partitura" accept="image/*" onchange="previewImagem(event)" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full">
+                        <div class="text-center space-y-1 py-2" id="upload-prompt">
+                            <i class="fa-regular fa-image text-3xl text-slate-400"></i>
+                            <p class="text-sm font-medium text-slate-600">Arraste ou clique para enviar uma foto da Partitura (PNG, JPG)</p>
+                            <p class="text-xs text-slate-400">Apenas arquivos de imagem são suportados para visualização direta no altar.</p>
+                        </div>
+                        <!-- Preview da Imagem Cadastrada -->
+                        <div id="img-preview-container" class="hidden w-full flex flex-col items-center space-y-2">
+                            <img id="img-preview" src="#" alt="Preview" class="max-h-32 object-contain rounded border">
+                            <button type="button" onclick="removerImagemPreview()" class="text-xs text-red-500 hover:underline">Remover Imagem</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Letras / Cifras -->
+                <div class="space-y-2 md:col-span-2">
+                    <div class="flex justify-between items-center">
+                        <label class="block text-sm font-semibold text-slate-700">Cifra e Letra da Música (Opcional)</label>
+                        <!-- BOTÃO DE IA GEMINI -->
+                        <button type="button" onclick="buscarCifraComAI()" id="btn-gemini-ai" class="px-3 py-1.5 bg-amber-500/10 hover:bg-amber-50 hover:text-slate-900 text-amber-600 rounded-lg text-xs font-bold transition-all flex items-center space-x-1.5 border border-amber-500/20">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i>
+                            <span id="gemini-btn-text">Buscar Letra/Cifra com IA (Google Gemini)</span>
+                        </button>
+                    </div>
+                    <textarea id="input-letra" rows="12" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 chords-font text-sm bg-amber-50/20" placeholder="C             G
+Senhor meu Deus, quando eu maravilhado..."></textarea>
+                    <p class="text-xs text-slate-400">Dica: Escreva as cifras na linha de cima das letras com a primeira letra em MAIÚSCULA (Ex: C, G, Am, F#m). O sistema identificará automaticamente para transpor!</p>
+                </div>
+
+                <!-- Botões -->
+                <div class="flex justify-end space-x-3 md:col-span-2 border-t pt-4">
+                    <button type="button" onclick="cancelarEdicao()" class="px-5 py-3 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 transition-all font-medium">Cancelar</button>
+                    <button type="submit" class="px-6 py-3 rounded-xl bg-amber-500 text-slate-900 font-bold hover:bg-amber-400 transition-all">Salvar Música</button>
+                </div>
+            </form>
+        </section>
+
+        <!-- 3. TELA DE REPERTÓRIO (OTIMIZADA PARA LISTAGEM EM MASSA) -->
+        <section id="view-repertorio" class="view-section hidden space-y-6">
+            <div class="flex flex-col md:flex-row md:items-center justify-between border-b pb-4 gap-4">
+                <div>
+                    <h2 class="text-3xl font-bold text-slate-800">Repertório Completo</h2>
+                    <p class="text-sm text-slate-500">Listagem otimizada para acervos extensos (mais de 1000 músicas). Pesquisa instantânea inteligente.</p>
+                </div>
+                <!-- Barra de Busca -->
+                <div class="relative w-full md:w-80">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </span>
+                    <input type="text" id="search-repertorio" oninput="filtrarRepertorio()" class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 text-sm" placeholder="Buscar por título ou ministério...">
+                </div>
+            </div>
+
+            <!-- TABELA / LISTA COMPACTA DE MÚSICAS -->
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-950 text-white text-xs uppercase tracking-wider font-semibold">
+                                <th class="py-3.5 px-4 font-semibold">Título do Louvor</th>
+                                <th class="py-3.5 px-4 font-semibold">Ministério / Compositor</th>
+                                <th class="py-3.5 px-4 font-semibold text-center">Anexos / Links</th>
+                                <th class="py-3.5 px-4 text-right">Ações de Altar</th>
+                            </tr>
+                        </thead>
+                        <tbody id="repertorio-list-tbody" class="divide-y divide-slate-200 text-sm">
+                            <!-- Injetado dinamicamente via JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Alerta Vazio -->
+            <div id="repertorio-vazio" class="hidden text-center py-16 bg-white rounded-2xl border border-dashed border-slate-200 space-y-3">
+                <i class="fa-regular fa-folder text-5xl text-slate-300"></i>
+                <h3 class="text-lg font-bold text-slate-700">Nenhum louvor encontrado</h3>
+                <p class="text-slate-500 text-sm max-w-sm mx-auto">Cadastre músicas ou modifique o termo de pesquisa utilizado.</p>
+                <button onclick="navegarPara('cadastro')" class="mt-2 px-4 py-2 bg-amber-500 hover:bg-amber-400 text-slate-900 font-bold rounded-lg text-sm transition-all">Cadastrar Louvor</button>
+            </div>
+        </section>
+
+        <!-- 4. TELA DE PROGRAMAÇÃO (SETLISTS) -->
+        <section id="view-programacao" class="view-section hidden space-y-6">
+            <div class="flex flex-col md:flex-row md:items-center justify-between border-b pb-4 gap-4">
+                <div>
+                    <h2 class="text-3xl font-bold text-slate-800">Programação & Setlists</h2>
+                    <p class="text-sm text-slate-500">Organize os repertórios por data ou escala de cultos de forma prática.</p>
+                </div>
+                <button onclick="abrirModalNovoSetlist()" class="px-4 py-2.5 bg-amber-500 hover:bg-amber-400 text-slate-900 font-bold rounded-xl text-sm transition-all flex items-center space-x-2">
+                    <i class="fa-solid fa-plus"></i>
+                    <span>Nova Programação</span>
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Coluna 1 & 2: Setlists Salvos -->
+                <div class="lg:col-span-2 space-y-4">
+                    <h3 class="text-lg font-bold text-slate-700 flex items-center space-x-2">
+                        <i class="fa-solid fa-box-archive text-amber-500"></i>
+                        <span>Programações Salvas</span>
+                    </h3>
+                    <div id="setlists-salvos" class="grid grid-cols-1 gap-4">
+                        <!-- Injetado via JS -->
+                    </div>
+                    <div id="setlists-vazio" class="hidden text-center py-12 bg-white rounded-xl border border-slate-200 space-y-2">
+                        <p class="text-slate-500">Nenhum setlist salvo no momento.</p>
+                    </div>
+                </div>
+
+                <!-- Coluna 3: Rascunho / Criar Novo Setlist Dinâmico -->
+                <div class="bg-white rounded-2xl border border-slate-150 p-6 space-y-4 h-fit">
+                    <div class="border-b pb-2">
+                        <h3 class="text-lg font-bold text-slate-800">Montar Escala Rápida</h3>
+                        <p class="text-xs text-slate-500">Selecione louvores em ordem alfabética para tocar já.</p>
+                    </div>
+
+                    <!-- Barra de Pesquisa Rápida na Escala -->
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+                            <i class="fa-solid fa-magnifying-glass text-xs"></i>
+                        </span>
+                        <input type="text" id="search-quick-scale" oninput="filtrarQuickScale()" class="w-full pl-9 pr-4 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 text-xs" placeholder="Buscar música no acervo...">
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div class="space-y-1.5 max-h-60 overflow-y-auto border rounded-xl p-3" id="checkboxes-repertorio">
+                            <!-- Injetado via JS -->
+                        </div>
+                        <button onclick="iniciarSetlistImediato()" class="w-full py-3 bg-slate-900 text-amber-400 font-bold rounded-xl hover:bg-slate-800 transition-all flex items-center justify-center space-x-2">
+                            <i class="fa-solid fa-play"></i>
+                            <span>Tocar Escala Selecionada</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
     </main>
 
-    <!-- Mesmo footer do index -->
-    <footer>
-        <!-- Código igual ao do index.html -->
+    <!-- 5. TELA DE APRESENTAÇÃO (LIVE SCREEN / MODO PERFORMANCE) -->
+    <section id="view-apresentacao" class="hidden fixed inset-0 bg-slate-950 text-slate-200 flex flex-col z-50">
+        
+        <!-- Header da Performance -->
+        <header class="bg-slate-900 border-b border-slate-800 px-6 py-4 flex justify-between items-center shrink-0">
+            <div class="flex items-center space-x-4">
+                <button onclick="sairModoApresentacao()" class="text-slate-400 hover:text-white transition-colors">
+                    <i class="fa-solid fa-chevron-left text-xl"></i>
+                </button>
+                <div>
+                    <h4 id="performance-titulo" class="text-lg md:text-xl font-bold text-white">Carregando louvor...</h4>
+                    <p id="performance-autor" class="text-xs text-slate-400">Ministério</p>
+                </div>
+            </div>
+            
+            <!-- Controles Auxiliares de Altar -->
+            <div class="flex flex-wrap items-center gap-2 md:gap-4">
+                
+                <!-- SELETOR DE TOM DA SESSÃO (TRANSPOSE) -->
+                <div class="bg-slate-800 rounded-lg p-1 flex items-center space-x-1 border border-slate-700">
+                    <span class="text-[11px] text-slate-400 px-1 font-semibold uppercase">Tom:</span>
+                    <button onclick="ajustarTom(-1)" class="px-2 py-0.5 text-xs bg-slate-900 rounded text-amber-400 hover:bg-amber-500 hover:text-slate-900 transition-all font-bold" title="Abaixar Meio Tom">-</button>
+                    <span id="label-tom-transposto" class="px-2 text-xs font-mono font-bold text-white">Original</span>
+                    <button onclick="ajustarTom(1)" class="px-2 py-0.5 text-xs bg-slate-900 rounded text-amber-400 hover:bg-amber-500 hover:text-slate-900 transition-all font-bold" title="Subir Meio Tom">+</button>
+                    <button onclick="resetarTom()" class="px-1 text-[10px] text-slate-500 hover:text-white" title="Resetar Tom Original"><i class="fa-solid fa-arrow-rotate-left"></i></button>
+                </div>
+
+                <!-- Ouvir Link Auxiliar se houver -->
+                <a id="performance-btn-link" href="#" target="_blank" class="hidden bg-slate-800 hover:bg-slate-700 text-red-400 px-3 py-1.5 rounded-lg text-xs flex items-center space-x-2 transition-all">
+                    <i class="fa-brands fa-youtube"></i>
+                    <span class="hidden md:inline">Ouvir Guia</span>
+                </a>
+                
+                <!-- Ajustador de Fonte -->
+                <div class="bg-slate-800 rounded-lg p-1 flex items-center space-x-1">
+                    <button onclick="ajustarLetra(-2)" class="px-2 py-1 text-xs text-slate-300 hover:text-white" title="Diminuir Fonte"><i class="fa-solid fa-font text-xs"></i>-</button>
+                    <button onclick="ajustarLetra(2)" class="px-2 py-1 text-xs text-slate-300 hover:text-white" title="Aumentar Fonte"><i class="fa-solid fa-font text-base"></i>+</button>
+                </div>
+
+                <!-- Auto-Scroll Switcher -->
+                <div class="bg-slate-800 rounded-lg px-2 py-1 flex items-center space-x-2">
+                    <button id="btn-autoscroll" onclick="toggleAutoScroll()" class="text-xs font-semibold text-slate-300 hover:text-white flex items-center space-x-1">
+                        <i class="fa-solid fa-circle-play"></i>
+                        <span id="label-autoscroll">Auto-Scroll</span>
+                    </button>
+                    <select id="select-speed" class="bg-slate-900 text-slate-300 text-xs border border-slate-700 rounded p-0.5 focus:outline-none" onchange="atualizarVelocidadeScroll()">
+                        <option value="1">Lento</option>
+                        <option value="2" selected>Médio</option>
+                        <option value="3">Rápido</option>
+                    </select>
+                </div>
+
+                <!-- Alternador de Cores (Dia/Noite para o Altar) -->
+                <button onclick="toggleTemaPerformance()" class="bg-slate-800 p-2 rounded-lg text-slate-300 hover:text-white transition-colors" title="Mudar Tema">
+                    <i id="btn-tema-icon" class="fa-solid fa-sun text-sm"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- CONTAINER SPLIT INTERATIVO DA PERFORMANCE -->
+        <div class="flex-grow flex flex-col min-h-0 relative" id="performance-bg-panel">
+            
+            <!-- Painel de Partitura Superior (Fixo de ~2 a 3 cm - 120px a 160px) -->
+            <div id="performance-score-area" class="h-40 shrink-0 bg-white border-b-2 border-amber-500 overflow-x-auto overflow-y-hidden flex items-center justify-center p-2 transition-all relative">
+                <!-- Controle de tamanho do painel de partitura -->
+                <div class="absolute bottom-1 right-2 bg-slate-900/80 rounded px-1.5 py-0.5 text-[10px] text-white flex space-x-2 z-10">
+                    <button onclick="redimensionarPartitura(-20)"><i class="fa-solid fa-minus"></i> Altura</button>
+                    <button onclick="redimensionarPartitura(20)"><i class="fa-solid fa-plus"></i> Altura</button>
+                </div>
+                <img id="performance-score-img" src="" alt="Partitura / Guia de Acordes" class="h-full object-contain mx-auto">
+            </div>
+
+            <!-- Painel da Cifra e Letras (Rolagem vertical ampla) -->
+            <div id="performance-lyrics-area" class="flex-grow overflow-y-auto px-6 py-8 chords-font select-none text-base leading-relaxed whitespace-pre" style="font-size: 18px;">
+                <!-- Conteúdo da Letra Injetado via JS -->
+            </div>
+        </div>
+
+        <!-- Barra Inferior de Navegação de Repertório ativo -->
+        <footer class="bg-slate-900 border-t border-slate-800 px-6 py-4 shrink-0 flex justify-between items-center">
+            <button id="p-btn-anterior" onclick="mudarMusicaPerformance(-1)" class="px-4 py-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 disabled:opacity-40 font-semibold text-sm transition-all flex items-center space-x-2 text-white">
+                <i class="fa-solid fa-chevron-left"></i>
+                <span>Anterior</span>
+            </button>
+            
+            <div class="text-center">
+                <span id="p-progresso-indicador" class="text-xs tracking-wider uppercase font-semibold text-amber-500">Música 1 de 5</span>
+            </div>
+
+            <button id="p-btn-proxima" onclick="mudarMusicaPerformance(1)" class="px-4 py-2.5 rounded-lg bg-amber-500 text-slate-950 font-bold hover:bg-amber-400 font-semibold text-sm transition-all flex items-center space-x-2">
+                <span id="p-btn-proxima-label">Próxima</span>
+                <i class="fa-solid fa-chevron-right"></i>
+            </button>
+        </footer>
+    </section>
+
+    <!-- MODAL PARA CRIAR/EDITAR PROGRAMAÇÃO -->
+    <div id="modal-setlist" class="hidden fixed inset-0 bg-slate-950/50 flex items-center justify-center p-4 z-40">
+        <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-xl space-y-4">
+            <div class="flex justify-between items-center border-b pb-3">
+                <h3 class="text-lg font-bold text-slate-800" id="modal-setlist-titulo">Nova Programação</h3>
+                <button onclick="fecharModalNovoSetlist()" class="text-slate-400 hover:text-slate-700">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            
+            <form onsubmit="salvarSetlist(event)" class="space-y-4">
+                <input type="hidden" id="modal-setlist-id">
+                <div class="space-y-2">
+                    <label class="block text-sm font-semibold text-slate-700">Nome do Setlist / Culto *</label>
+                    <input type="text" id="modal-setlist-nome" required class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500" placeholder="Ex: Culto de Jovens - 15/06">
+                </div>
+
+                <div class="space-y-2">
+                    <label class="block text-sm font-semibold text-slate-700">Selecione e organize as músicas:</label>
+                    
+                    <!-- Campo de Busca no Modal de Setlist -->
+                    <div class="relative mb-2">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+                            <i class="fa-solid fa-magnifying-glass text-xs"></i>
+                        </span>
+                        <input type="text" id="search-modal-scale" oninput="filtrarModalScale()" class="w-full pl-9 pr-4 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 text-xs" placeholder="Pesquisar louvores para adicionar...">
+                    </div>
+
+                    <div id="modal-setlist-musicas-list" class="border rounded-xl p-3 max-h-56 overflow-y-auto space-y-2">
+                        <!-- Checkboxes injetados via JS -->
+                    </div>
+                </div>
+
+                <div class="flex justify-end space-x-2 border-t pt-3">
+                    <button type="button" onclick="fecharModalNovoSetlist()" class="px-4 py-2 border rounded-lg text-slate-600 hover:bg-slate-50">Cancelar</button>
+                    <button type="submit" class="px-5 py-2 bg-amber-500 text-slate-900 font-bold rounded-lg hover:bg-amber-400">Salvar Setlist</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- NOTIFICAÇÃO TOAST FLUTUANTE -->
+    <div id="toast" class="fixed bottom-6 right-6 bg-slate-900 text-white px-5 py-3 rounded-xl shadow-lg transform translate-y-20 opacity-0 transition-all duration-300 z-50 flex items-center space-x-3 text-sm">
+        <span id="toast-icon" class="text-amber-500"><i class="fa-solid fa-circle-check"></i></span>
+        <span id="toast-message">Mensagem do sistema</span>
+    </div>
+
+    <!-- RODAPÉ COMPLEMENTAR -->
+    <footer class="bg-slate-900 text-slate-400 text-center py-6 border-t border-slate-800 text-xs shrink-0">
+        <p class="title-gothic tracking-widest text-slate-300 font-semibold text-sm mb-1">Particifra</p>
+        <p>Apoio à liderança e instrumentalização de louvor. Todos os dados permanecem salvos localmente.</p>
     </footer>
+
+    <!-- SCRIPT DA APLICAÇÃO (SPA CORE) -->
+    <script>
+        // 1. Inicializa o Banco de Dados no Navegador via Dexie.js
+        const db = new Dexie("ParticifraDB");
+        db.version(2).stores({
+            musicas: '++id, titulo, autor, letra, link, imagemBase64',
+            setlists: '++id, nome, musicasIds'
+        });
+
+        // Controle Global de Rotas e Estado
+        let activeView = 'home';
+        let imagemCarregadaBase64 = null;
+        
+        // Cache global de músicas para filtragens instantâneas sem bater no IndexedDB
+        let musicasCache = [];
+        
+        // Gerenciamento de seleção ativa sem perda de estado ao filtrar
+        let quickScaleSelectedIds = new Set();
+        let modalScaleSelectedIds = new Set();
+
+        let setlistAtivoApresentacao = [];
+        let indexApresentacaoAtual = 0;
+        let timerAutoScroll = null;
+        let scrollSpeedMultiplier = 2; // Default speed
+        let scrollAtivo = false;
+        let scaleApresentacaoImagensAltura = 160; // Pixels padrão de altura
+        let globalDarkMode = false;
+        let transposiçãoSessao = 0; // Deslocamento de meio tom ativo na apresentação do altar
+
+        // Notas para algoritmo de transposição
+        const escalaNotas = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+        const equivalentesFlats = {
+            "Db": "C#", "Eb": "D#", "Gb": "F#", "Ab": "G#", "Bb": "A#",
+            "db": "C#", "eb": "D#", "gb": "F#", "ab": "G#", "bb": "A#"
+        };
+
+        // Inicialização
+        window.onload = async function() {
+            // Verificar tema salvo localmente
+            if(localStorage.getItem('particifra-dark') === 'true') {
+                toggleGlobalDarkMode(true);
+            }
+            await sincronizarCacheMusicas();
+            navegarPara('home');
+        };
+
+        // Atualiza a memória RAM local com as músicas do banco ordenadas alfabeticamente
+        async function sincronizarCacheMusicas() {
+            const rawMusicas = await db.musicas.toArray();
+            // Ordenar alfabeticamente nativo por Título do Louvor
+            musicasCache = rawMusicas.sort((a, b) => a.titulo.localeCompare(b.titulo));
+        }
+
+        // Roteamento SPA
+        function navegarPara(viewName) {
+            document.querySelectorAll('.view-section').forEach(section => {
+                section.classList.add('hidden');
+            });
+            const targetView = document.getElementById(`view-${viewName}`);
+            if (targetView) {
+                targetView.classList.remove('hidden');
+            }
+            activeView = viewName;
+
+            // Tratamento especial para carregamento de telas específicas
+            if (viewName === 'repertorio') {
+                carregarDadosRepertorio();
+            } else if (viewName === 'programacao') {
+                carregarDadosProgramacao();
+            }
+        }
+
+        // Sistema de Mensagens Flutuantes (Toast)
+        function showToast(mensagem, erro = false) {
+            const toast = document.getElementById('toast');
+            const icon = document.getElementById('toast-icon');
+            const msg = document.getElementById('toast-message');
+
+            msg.innerText = mensagem;
+            icon.innerHTML = erro ? '<i class="fa-solid fa-circle-exclamation text-red-500"></i>' : '<i class="fa-solid fa-circle-check text-amber-500"></i>';
+
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        // MODO ESCURO GLOBAL (TIPO ALTAR)
+        function toggleGlobalDarkMode(forcarDark = false) {
+            const body = document.body;
+            const icon = document.getElementById('global-theme-icon');
+
+            if (forcarDark || !globalDarkMode) {
+                body.classList.add('dark-theme');
+                icon.className = 'fa-solid fa-sun text-lg';
+                globalDarkMode = true;
+                localStorage.setItem('particifra-dark', 'true');
+            } else {
+                body.classList.remove('dark-theme');
+                icon.className = 'fa-solid fa-moon text-lg';
+                globalDarkMode = false;
+                localStorage.setItem('particifra-dark', 'false');
+            }
+        }
+
+        // --- INTEGRAÇÃO COM GOOGLE GEMINI API PARA BUSCA DE CIFRAS ---
+        async function buscarCifraComAI() {
+            const apiKey = ""; // Chave do ambiente
+            const titulo = document.getElementById('input-titulo').value.trim();
+            const autor = document.getElementById('input-autor').value.trim();
+
+            if (!titulo) {
+                showToast("Por favor, preencha pelo menos o 'Título da Música' antes de buscar.", true);
+                return;
+            }
+
+            const btn = document.getElementById('btn-gemini-ai');
+            const btnText = document.getElementById('gemini-btn-text');
+            
+            btn.disabled = true;
+            btnText.innerText = "Buscando louvor no acervo Gemini...";
+            btn.classList.add('opacity-50', 'cursor-not-allowed');
+
+            const queryPrompt = `Forneça a cifra e a letra completas da música "${titulo}" de "${autor || 'autor desconhecido'}". Coloque os acordes (cifras) na linha diretamente ACIMA das palavras correspondentes, alinhando-as com espaços. Não use colchetes, parênteses ou marcações especiais nas cifras (ex: use C, G, Am, F#m). Forneça apenas a letra cifrada formatada na linguagem oficial, sem qualquer introdução ou explicações adicionais.`;
+            const systemPrompt = "Você é um assistente especialista em música sacra, partituras e cifras evangélicas. Seu papel é retornar a cifra estruturada sem colchetes de forma limpa e fiel.";
+
+            let sucesso = false;
+            let retryCount = 0;
+            const delays = [1000, 2000, 4000, 8000, 16000];
+
+            while (!sucesso && retryCount < 5) {
+                try {
+                    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            contents: [{ parts: [{ text: queryPrompt }] }],
+                            systemInstruction: { parts: [{ text: systemPrompt }] }
+                        })
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP Error Status: ${response.status}`);
+                    }
+
+                    const result = await response.json();
+                    const textResult = result.candidates?.[0]?.content?.parts?.[0]?.text;
+
+                    if (textResult) {
+                        document.getElementById('input-letra').value = textResult;
+                        showToast("Letra e Cifra importadas com sucesso!");
+                        sucesso = true;
+                    } else {
+                        throw new Error("Formato de resposta inesperado");
+                    }
+
+                } catch (err) {
+                    retryCount++;
+                    if (retryCount >= 5) {
+                        console.error("Todas as tentativas de API falharam:", err);
+                        showToast("Falha ao buscar cifra. Digite manualmente ou tente de novo.", true);
+                    } else {
+                        await new Promise(resolve => setTimeout(resolve, delays[retryCount - 1]));
+                    }
+                }
+            }
+
+            btn.disabled = false;
+            btnText.innerText = "Buscar Letra/Cifra com IA (Google Gemini)";
+            btn.classList.remove('opacity-50', 'cursor-not-allowed');
+        }
+
+        // --- SISTEMA DE DETECÇÃO E TRANSPOSIÇÃO DE LINHAS DE CIFRA ---
+        
+        function isChordLine(line) {
+            const tokens = line.trim().split(/\s+/);
+            if (tokens.length === 0 || line.trim() === '') return false;
+            
+            const chordPattern = /^[A-G][b#]?(m|M|maj|min|dim|aug|sus|add|no|alt|5|6|7|9|11|13)*(\/[A-G][b#]?(m|M|maj|min|dim|aug|sus|add|no|alt|5|6|7|9|11|13)*)?$/;
+            
+            let chordCount = 0;
+            for (let token of tokens) {
+                const cleanToken = token.replace(/[():,]/g, '');
+                if (chordPattern.test(cleanToken)) {
+                    chordCount++;
+                }
+            }
+            
+            return (chordCount / tokens.length) >= 0.7;
+        }
+
+        function transporAcorde(acorde, semitones) {
+            if (semitones === 0) return acorde;
+            if (acorde.includes('/')) {
+                return acorde.split('/').map(part => transporAcordeIndividual(part.trim(), semitones)).join('/');
+            }
+            return transporAcordeIndividual(acorde, semitones);
+        }
+
+        function transporAcordeIndividual(acorde, semitones) {
+            const match = acorde.match(/^([A-G][b#]?)(.*)$/);
+            if (!match) return acorde;
+
+            let raiz = match[1];
+            const complemento = match[2];
+
+            if (equivalentesFlats[raiz]) {
+                raiz = equivalentsFlats[raiz];
+            }
+
+            const indexOriginal = escalaNotas.indexOf(raiz);
+            if (indexOriginal === -1) return acorde;
+
+            let novoIndex = (indexOriginal + semitones) % 12;
+            if (novoIndex < 0) novoIndex += 12;
+
+            return escalaNotas[novoIndex] + complemento;
+        }
+
+        function processarLetraComTom(textoCompleto, semitones) {
+            if (semitones === 0 || !textoCompleto) return textoCompleto;
+
+            const lines = textoCompleto.split('\n');
+            const linesProcessadas = lines.map(line => {
+                if (isChordLine(line)) {
+                    return line.replace(/([A-G][^\s]*)/g, (match) => {
+                        return transporAcorde(match, semitones);
+                    });
+                }
+                return line;
+            });
+            
+            return linesProcessadas.join('\n');
+        }
+
+        function ajustarTom(direcao) {
+            transposiçãoSessao += direcao;
+            
+            if (transposiçãoSessao > 11) transposiçãoSessao = -11;
+            if (transposiçãoSessao < -11) transposiçãoSessao = 11;
+
+            const label = document.getElementById('label-tom-transposto');
+            if (transposiçãoSessao === 0) {
+                label.innerText = "Original";
+            } else {
+                label.innerText = (transposiçãoSessao > 0 ? `+${transposiçãoSessao}` : transposiçãoSessao) + " Semitões";
+            }
+
+            atualizarLetraApresentacaoComTom();
+        }
+
+        function resetarTom() {
+            transposiçãoSessao = 0;
+            document.getElementById('label-tom-transposto').innerText = "Original";
+            atualizarLetraApresentacaoComTom();
+        }
+
+        function atualizarLetraApresentacaoComTom() {
+            if (setlistAtivoApresentacao.length === 0) return;
+            const m = setlistAtivoApresentacao[indexApresentacaoAtual];
+            const areaLyrics = document.getElementById('performance-lyrics-area');
+            areaLyrics.innerText = processarLetraComTom(m.letra, transposiçãoSessao) || "Cifra não cadastrada.";
+        }
+
+        // --- MÓDULO DE CADASTRO ---
+
+        function previewImagem(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                imagemCarregadaBase64 = e.target.result;
+                document.getElementById('upload-prompt').classList.add('hidden');
+                document.getElementById('img-preview-container').classList.remove('hidden');
+                document.getElementById('img-preview').src = imagemCarregadaBase64;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function removerImagemPreview() {
+            imagemCarregadaBase64 = null;
+            document.getElementById('input-partitura').value = '';
+            document.getElementById('upload-prompt').classList.remove('hidden');
+            document.getElementById('img-preview-container').classList.add('hidden');
+            document.getElementById('img-preview').src = '#';
+        }
+
+        async function salvarMusica(event) {
+            event.preventDefault();
+            
+            const id = document.getElementById('edit-id').value;
+            const titulo = document.getElementById('input-titulo').value.trim();
+            const autorInput = document.getElementById('input-autor').value.trim();
+            const autor = autorInput || "Autor Desconhecido";
+            const link = document.getElementById('input-link').value.trim();
+            const letra = document.getElementById('input-letra').value;
+
+            if (!titulo) {
+                showToast("Por favor preencha os campos obrigatórios.", true);
+                return;
+            }
+
+            const musicData = {
+                titulo,
+                autor,
+                link,
+                letra,
+                imagemBase64: imagemCarregadaBase64
+            };
+
+            try {
+                if (id) {
+                    await db.musicas.update(Number(id), musicData);
+                    showToast("Música editada com sucesso!");
+                } else {
+                    await db.musicas.add(musicData);
+                    showToast("Música cadastrada com sucesso!");
+                }
+                
+                await sincronizarCacheMusicas();
+                cancelarEdicao();
+                navegarPara('repertorio');
+            } catch (err) {
+                console.error("Erro ao salvar música:", err);
+                showToast("Houve um erro ao processar o salvamento.", true);
+            }
+        }
+
+        function cancelarEdicao() {
+            document.getElementById('form-cadastro').reset();
+            document.getElementById('edit-id').value = '';
+            removerImagemPreview();
+            navegarPara('home');
+        }
+
+        // --- MÓDULO DE REPERTÓRIO (LISTA DE ALTA DENSIDADE) ---
+
+        async function carregarDadosRepertorio() {
+            await sincronizarCacheMusicas(); // Garante banco fresco ordenado por A-Z
+            renderizarLinhasTabelaRepertorio(musicasCache);
+        }
+
+        function renderizarLinhasTabelaRepertorio(listaMusicas) {
+            const tbody = document.getElementById('repertorio-list-tbody');
+            const vazio = document.getElementById('repertorio-vazio');
+            tbody.innerHTML = '';
+
+            if (listaMusicas.length === 0) {
+                vazio.classList.remove('hidden');
+                return;
+            }
+            vazio.classList.add('hidden');
+
+            listaMusicas.forEach(musica => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-50 transition-colors border-b border-slate-100 last:border-0";
+                
+                // Trata badges de Anexos
+                let linkHTML = '';
+                if (musica.link) {
+                    linkHTML = `
+                        <a href="${musica.link}" target="_blank" class="p-1 px-2.5 bg-red-50 text-red-600 hover:bg-red-100 rounded text-xs font-semibold inline-flex items-center gap-1 transition-all" title="Ouvir referência no YouTube/Spotify">
+                            <i class="fa-brands fa-youtube"></i> Áudio
+                        </a>
+                    `;
+                }
+
+                let tagPartitura = '';
+                if (musica.imagemBase64) {
+                    tagPartitura = `
+                        <span class="p-1 px-2.5 bg-amber-50 text-amber-700 rounded text-xs font-semibold inline-flex items-center gap-1" title="Esta música possui Partitura guia anexada">
+                            <i class="fa-solid fa-file-image"></i> Partitura
+                        </span>
+                    `;
+                }
+
+                tr.innerHTML = `
+                    <td class="py-3 px-4 font-bold text-slate-900">${musica.titulo}</td>
+                    <td class="py-3 px-4 text-slate-500 font-medium">${musica.autor}</td>
+                    <td class="py-3 px-4 text-center">
+                        <div class="flex items-center justify-center gap-1.5">
+                            ${linkHTML}
+                            ${tagPartitura || '<span class="text-xs text-slate-300">-</span>'}
+                        </div>
+                    </td>
+                    <td class="py-3 px-4 text-right">
+                        <div class="inline-flex items-center gap-1">
+                            <button onclick="editarMusica(${musica.id})" class="p-1.5 text-xs text-slate-400 hover:text-amber-500 rounded hover:bg-slate-100 transition-all" title="Editar"><i class="fa-solid fa-pen-to-square"></i></button>
+                            <button onclick="excluirMusica(${musica.id})" class="p-1.5 text-xs text-slate-400 hover:text-red-500 rounded hover:bg-slate-100 transition-all" title="Excluir"><i class="fa-solid fa-trash-can"></i></button>
+                            <button onclick="iniciarApresentacaoIndividual(${musica.id})" class="ml-1 px-3 py-1 bg-slate-950 hover:bg-amber-500 hover:text-slate-950 text-white font-bold text-xs rounded transition-all flex items-center space-x-1">
+                                <i class="fa-solid fa-play text-[9px]"></i>
+                                <span>Tocar</span>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function filtrarRepertorio() {
+            const query = document.getElementById('search-repertorio').value.toLowerCase().trim();
+            const filtradas = musicasCache.filter(m => 
+                m.titulo.toLowerCase().includes(query) || 
+                m.autor.toLowerCase().includes(query)
+            );
+            renderizarLinhasTabelaRepertorio(filtradas);
+        }
+
+        async function editarMusica(id) {
+            const musica = await db.musicas.get(id);
+            if (!musica) return;
+
+            document.getElementById('edit-id').value = musica.id;
+            document.getElementById('input-titulo').value = musica.titulo;
+            document.getElementById('input-autor').value = musica.autor === "Autor Desconhecido" ? "" : musica.autor;
+            document.getElementById('input-link').value = musica.link || '';
+            document.getElementById('input-letra').value = musica.letra || '';
+
+            if (musica.imagemBase64) {
+                imagemCarregadaBase64 = musica.imagemBase64;
+                document.getElementById('upload-prompt').classList.add('hidden');
+                document.getElementById('img-preview-container').classList.remove('hidden');
+                document.getElementById('img-preview').src = imagemCarregadaBase64;
+            } else {
+                removerImagemPreview();
+            }
+
+            navegarPara('cadastro');
+        }
+
+        async function excluirMusica(id) {
+            if (confirm("Deseja realmente excluir esta música permanentemente do banco de dados local?")) {
+                await db.musicas.delete(id);
+                showToast("Música excluída.");
+                await sincronizarCacheMusicas();
+                carregarDadosRepertorio();
+            }
+        }
+
+
+        // --- MÓDULO DE SETLISTS (PROGRAMAÇÃO) ---
+
+        async function carregarDadosProgramacao() {
+            await sincronizarCacheMusicas(); // Garante acervo ordenado por A-Z
+            
+            const setlists = await db.setlists.toArray();
+            const containerSaved = document.getElementById('setlists-salvos');
+            const emptyLabel = document.getElementById('setlists-vazio');
+            
+            // Limpa buscas anteriores
+            document.getElementById('search-quick-scale').value = '';
+            
+            // Renderiza checkboxes da escala rápida com preservação de estado
+            quickScaleSelectedIds.clear(); // Limpa seleções de rascunhos anteriores
+            renderizarCheckboxesEscalaRapida(musicasCache);
+
+            // Renderização dos Setlists Salvos
+            containerSaved.innerHTML = '';
+            if (setlists.length === 0) {
+                emptyLabel.classList.remove('hidden');
+                return;
+            }
+
+            emptyLabel.classList.add('hidden');
+
+            for (let list of setlists) {
+                const card = document.createElement('div');
+                card.className = "bg-white border rounded-xl p-5 shadow-sm space-y-4 hover:border-slate-300 transition-all";
+                
+                let musicasInfo = [];
+                for (let mId of list.musicasIds) {
+                    const m = await db.musicas.get(mId);
+                    if (m) musicasInfo.push(m.titulo);
+                }
+
+                card.innerHTML = `
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h4 class="font-bold text-slate-900 text-lg">${list.nome}</h4>
+                            <p class="text-xs text-slate-400">${musicasInfo.length} louvores escalados</p>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button onclick="editarSetlist(${list.id})" class="text-slate-400 hover:text-amber-500 p-1 text-sm" title="Editar Programação / Adicionar Músicas"><i class="fa-solid fa-pen-to-square"></i></button>
+                            <button onclick="excluirSetlist(${list.id})" class="text-slate-400 hover:text-red-500 p-1 text-sm" title="Excluir"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-slate-50 rounded-lg p-3 text-xs text-slate-600 font-medium max-h-24 overflow-y-auto">
+                        ${musicasInfo.length > 0 ? musicasInfo.join(" • ") : "Sem músicas cadastradas"}
+                    </div>
+
+                    <div class="flex justify-end pt-2">
+                        <button onclick="iniciarApresentacaoSetlist(${list.id})" class="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-amber-400 font-bold rounded-lg text-xs flex items-center space-x-1.5 transition-all">
+                            <i class="fa-solid fa-circle-play"></i>
+                            <span>Iniciar Apresentação</span>
+                        </button>
+                    </div>
+                `;
+                containerSaved.appendChild(card);
+            }
+        }
+
+        // Renderiza lista de checkboxes de forma rápida na sidebar lateral
+        function renderizarCheckboxesEscalaRapida(listaMusicas) {
+            const container = document.getElementById('checkboxes-repertorio');
+            container.innerHTML = '';
+
+            if (listaMusicas.length === 0) {
+                container.innerHTML = `<p class="text-xs text-slate-400">Nenhum louvor correspondente.</p>`;
+                return;
+            }
+
+            listaMusicas.forEach(musica => {
+                const label = document.createElement('label');
+                label.className = "flex items-center space-x-2 text-sm text-slate-700 py-1.5 cursor-pointer hover:bg-slate-50 rounded px-1 transition-all";
+                
+                const isChecked = quickScaleSelectedIds.has(musica.id) ? 'checked' : '';
+
+                label.innerHTML = `
+                    <input type="checkbox" value="${musica.id}" ${isChecked} onchange="toggleQuickScaleSelection(this)" class="setlist-draft-checkbox rounded border-slate-300 text-amber-500 focus:ring-amber-500">
+                    <span class="truncate font-semibold">${musica.titulo} <span class="text-xs text-slate-400 font-normal">(${musica.autor})</span></span>
+                `;
+                container.appendChild(label);
+            });
+        }
+
+        // Armazena ID selecionado em tempo real no Rascunho para não perder o check ao buscar
+        function toggleQuickScaleSelection(element) {
+            const id = Number(element.value);
+            if (element.checked) {
+                quickScaleSelectedIds.add(id);
+            } else {
+                quickScaleSelectedIds.delete(id);
+            }
+        }
+
+        // Filtra instantaneamente as checkboxes da barra de rascunhos lateral
+        function filtrarQuickScale() {
+            const query = document.getElementById('search-quick-scale').value.toLowerCase().trim();
+            const filtradas = musicasCache.filter(m => 
+                m.titulo.toLowerCase().includes(query) || 
+                m.autor.toLowerCase().includes(query)
+            );
+            renderizarCheckboxesEscalaRapida(filtradas);
+        }
+
+        // Modal Controle Setlist (Cadastro de novos ou edição)
+        async function abrirModalNovoSetlist() {
+            modalScaleSelectedIds.clear(); // Limpa seleções temporárias
+            document.getElementById('search-modal-scale').value = '';
+
+            await renderizarCheckboxesModal(musicasCache);
+
+            document.getElementById('modal-setlist-nome').value = '';
+            document.getElementById('modal-setlist-id').value = '';
+            document.getElementById('modal-setlist-titulo').innerText = "Nova Programação";
+            document.getElementById('modal-setlist').classList.remove('hidden');
+        }
+
+        // Renderiza checkboxes das músicas dentro do Modal
+        function renderizarCheckboxesModal(listaMusicas) {
+            const listContainer = document.getElementById('modal-setlist-musicas-list');
+            listContainer.innerHTML = '';
+
+            if (listaMusicas.length === 0) {
+                listContainer.innerHTML = `<p class="text-xs text-slate-400">Nenhum louvor correspondente.</p>`;
+                return;
+            }
+
+            listaMusicas.forEach(m => {
+                const item = document.createElement('label');
+                item.className = "flex items-center space-x-2 text-sm text-slate-700 py-1.5 border-b last:border-0 pb-1 cursor-pointer hover:bg-slate-50 px-1 transition-all";
+                
+                const isChecked = modalScaleSelectedIds.has(m.id) ? 'checked' : '';
+
+                item.innerHTML = `
+                    <input type="checkbox" value="${m.id}" ${isChecked} onchange="toggleModalScaleSelection(this)" class="modal-musica-checkbox rounded border-slate-300 text-amber-500 focus:ring-amber-500">
+                    <span class="font-bold text-slate-900">${m.titulo} <span class="text-xs text-slate-400 font-normal">(${m.autor})</span></span>
+                `;
+                listContainer.appendChild(item);
+            });
+        }
+
+        // Armazena ID selecionado em tempo real no Modal para não perder estado ao buscar
+        function toggleModalScaleSelection(element) {
+            const id = Number(element.value);
+            if (element.checked) {
+                modalScaleSelectedIds.add(id);
+            } else {
+                modalScaleSelectedIds.delete(id);
+            }
+        }
+
+        // Filtra instantaneamente as checkboxes do Modal de Escala
+        function filtrarModalScale() {
+            const query = document.getElementById('search-modal-scale').value.toLowerCase().trim();
+            const filtradas = musicasCache.filter(m => 
+                m.titulo.toLowerCase().includes(query) || 
+                m.autor.toLowerCase().includes(query)
+            );
+            renderizarCheckboxesModal(filtradas);
+        }
+
+        // Edição de Programação Existente
+        async function editarSetlist(id) {
+            const setlist = await db.setlists.get(id);
+            if (!setlist) return;
+
+            // Zera controle e abre modal limpo com busca vazia
+            modalScaleSelectedIds.clear();
+            document.getElementById('search-modal-scale').value = '';
+
+            // Seta as músicas ativas no Set de controle
+            setlist.musicasIds.forEach(mId => {
+                modalScaleSelectedIds.add(mId);
+            });
+
+            // Renderiza lista base
+            renderizarCheckboxesModal(musicasCache);
+
+            // Seta os valores correspondentes no formulário do modal
+            document.getElementById('modal-setlist-id').value = setlist.id;
+            document.getElementById('modal-setlist-nome').value = setlist.nome;
+            document.getElementById('modal-setlist-titulo').innerText = "Editar Programação";
+            document.getElementById('modal-setlist').classList.remove('hidden');
+        }
+
+        function fecharModalNovoSetlist() {
+            document.getElementById('modal-setlist').classList.add('hidden');
+        }
+
+        async function salvarSetlist(event) {
+            event.preventDefault();
+            const id = document.getElementById('modal-setlist-id').value;
+            const nome = document.getElementById('modal-setlist-nome').value.trim();
+            
+            // Cria array com base nas chaves do Set de controle selecionado
+            const musicasIds = Array.from(modalScaleSelectedIds);
+
+            if (musicasIds.length === 0) {
+                showToast("Selecione pelo menos uma música para o Culto/evento.", true);
+                return;
+            }
+
+            const setlistData = {
+                nome,
+                musicasIds
+            };
+
+            if (id) {
+                await db.setlists.update(Number(id), setlistData);
+                showToast("Programação atualizada com sucesso.");
+            } else {
+                await db.setlists.add(setlistData);
+                showToast("Nova programação salva com sucesso.");
+            }
+
+            fecharModalNovoSetlist();
+            carregarDadosProgramacao();
+        }
+
+        async function excluirSetlist(id) {
+            if (confirm("Excluir esta programação do histórico?")) {
+                await db.setlists.delete(id);
+                showToast("Programação excluída.");
+                carregarDadosProgramacao();
+            }
+        }
+
+        // Executar uma única música avulsa em modo performance
+        async function iniciarApresentacaoIndividual(musicaId) {
+            const m = await db.musicas.get(musicaId);
+            if (!m) return;
+            setlistAtivoApresentacao = [m];
+            indexApresentacaoAtual = 0;
+            abrirPerformanceView();
+        }
+
+        // Tocar setlist imediato das caixas de seleção da lateral de rascunhos
+        async function iniciarSetlistImediato() {
+            const musicasIds = Array.from(quickScaleSelectedIds);
+            setlistAtivoApresentacao = [];
+            
+            for (let mId of musicasIds) {
+                const m = await db.musicas.get(mId);
+                if (m) setlistAtivoApresentacao.push(m);
+            }
+
+            // Ordena o rascunho de apresentação alfabeticamente também
+            setlistAtivoApresentacao.sort((a, b) => a.titulo.localeCompare(b.titulo));
+
+            if (setlistAtivoApresentacao.length === 0) {
+                showToast("Selecione alguma música primeiro.", true);
+                return;
+            }
+
+            indexApresentacaoAtual = 0;
+            abrirPerformanceView();
+        }
+
+        // Carregar um setlist salvo para o modo performance
+        async function iniciarApresentacaoSetlist(setlistId) {
+            const setlist = await db.setlists.get(setlistId);
+            if (!setlist) return;
+
+            setlistAtivoApresentacao = [];
+            for (let mId of setlist.musicasIds) {
+                const m = await db.musicas.get(mId);
+                if (m) setlistAtivoApresentacao.push(m);
+            }
+
+            if (setlistAtivoApresentacao.length === 0) {
+                showToast("Esta programação não possui músicas válidas registradas.", true);
+                return;
+            }
+
+            indexApresentacaoAtual = 0;
+            abrirPerformanceView();
+        }
+
+
+        // --- MÓDULO DE APRESENTAÇÃO (STAGE INTERACTION CORE) ---
+
+        function abrirPerformanceView() {
+            transposiçãoSessao = 0;
+            document.getElementById('label-tom-transposto').innerText = "Original";
+            document.getElementById('view-apresentacao').classList.remove('hidden');
+            renderizarMusicaPalco();
+        }
+
+        function sairModoApresentacao() {
+            pararAutoScroll();
+            document.getElementById('view-apresentacao').classList.add('hidden');
+        }
+
+        function renderizarMusicaPalco() {
+            if (setlistAtivoApresentacao.length === 0) return;
+            const m = setlistAtivoApresentacao[indexApresentacaoAtual];
+
+            document.getElementById('performance-titulo').innerText = m.titulo;
+            document.getElementById('performance-autor').innerText = m.autor;
+            document.getElementById('p-progresso-indicador').innerText = `Música ${indexApresentacaoAtual + 1} de ${setlistAtivoApresentacao.length}`;
+
+            const btnLink = document.getElementById('performance-btn-link');
+            if (m.link) {
+                btnLink.href = m.link;
+                btnLink.classList.remove('hidden');
+            } else {
+                btnLink.classList.add('hidden');
+            }
+
+            const scoreArea = document.getElementById('performance-score-area');
+            const scoreImg = document.getElementById('performance-score-img');
+            scoreArea.style.height = `${scaleApresentacaoImagensAltura}px`;
+
+            if (m.imagemBase64) {
+                scoreArea.classList.remove('hidden');
+                scoreImg.src = m.imagemBase64;
+            } else {
+                scoreArea.classList.add('hidden');
+                scoreImg.src = '';
+            }
+
+            atualizarLetraApresentacaoComTom();
+            
+            document.getElementById('performance-lyrics-area').scrollTop = 0;
+            pararAutoScroll();
+
+            document.getElementById('p-btn-anterior').disabled = (indexApresentacaoAtual === 0);
+            
+            const btnProximaLabel = document.getElementById('p-btn-proxima-label');
+            if (indexApresentacaoAtual === setlistAtivoApresentacao.length - 1) {
+                btnProximaLabel.innerText = "Finalizar";
+            } else {
+                btnProximaLabel.innerText = "Próxima";
+            }
+        }
+
+        function mudarMusicaPerformance(direcao) {
+            const novoIndex = indexApresentacaoAtual + direcao;
+            if (novoIndex >= 0 && novoIndex < setlistAtivoApresentacao.length) {
+                indexApresentacaoAtual = novoIndex;
+                renderizarMusicaPalco();
+            } else if (novoIndex >= setlistAtivoApresentacao.length) {
+                showToast("Fim da programação de louvores!");
+                sairModoApresentacao();
+            }
+        }
+
+        function ajustarLetra(delta) {
+            const panel = document.getElementById('performance-lyrics-area');
+            let currentSize = parseInt(panel.style.fontSize) || 18;
+            currentSize += delta;
+            if (currentSize >= 12 && currentSize <= 38) {
+                panel.style.fontSize = `${currentSize}px`;
+            }
+        }
+
+        function toggleAutoScroll() {
+            if (scrollAtivo) {
+                pararAutoScroll();
+            } else {
+                iniciarAutoScroll();
+            }
+        }
+
+        function iniciarAutoScroll() {
+            scrollAtivo = true;
+            document.getElementById('btn-autoscroll').classList.add('bg-amber-500', 'text-slate-950');
+            document.getElementById('btn-autoscroll').classList.remove('text-slate-300');
+            document.getElementById('label-autoscroll').innerText = "Rolando...";
+
+            const area = document.getElementById('performance-lyrics-area');
+            
+            timerAutoScroll = setInterval(() => {
+                area.scrollTop += 1;
+                if (area.scrollTop >= (area.scrollHeight - area.clientHeight)) {
+                    pararAutoScroll();
+                }
+            }, 50 / scrollSpeedMultiplier);
+        }
+
+        function pararAutoScroll() {
+            scrollAtivo = false;
+            if (timerAutoScroll) clearInterval(timerAutoScroll);
+            document.getElementById('btn-autoscroll').classList.remove('bg-amber-500', 'text-slate-950');
+            document.getElementById('btn-autoscroll').classList.add('text-slate-300');
+            document.getElementById('label-autoscroll').innerText = "Auto-Scroll";
+        }
+
+        function actualizarVelocidadeScroll() {
+            const select = document.getElementById('select-speed');
+            scrollSpeedMultiplier = Number(select.value);
+            if (scrollAtivo) {
+                pararAutoScroll();
+                iniciarAutoScroll();
+            }
+        }
+
+        function redimensionarPartitura(valor) {
+            scaleApresentacaoImagensAltura += valor;
+            if (scaleApresentacaoImagensAltura < 80) scaleApresentacaoImagensAltura = 80;
+            if (scaleApresentacaoImagensAltura > 320) scaleApresentacaoImagensAltura = 320;
+            document.getElementById('performance-score-area').style.height = `${scaleApresentacaoImagensAltura}px`;
+        }
+
+        function toggleTemaPerformance() {
+            const panel = document.getElementById('performance-bg-panel');
+            const lyricsArea = document.getElementById('performance-lyrics-area');
+            const themeIcon = document.getElementById('btn-tema-icon');
+
+            if (panel.classList.contains('bg-slate-950')) {
+                panel.classList.remove('bg-slate-950');
+                panel.classList.add('bg-amber-50');
+                lyricsArea.classList.remove('text-slate-200');
+                lyricsArea.classList.add('text-slate-900');
+                
+                themeIcon.classList.remove('fa-sun');
+                themeIcon.classList.add('fa-moon');
+                showToast("Modo de Visibilidade Diurna Ativado");
+            } else {
+                panel.classList.add('bg-slate-950');
+                panel.classList.remove('bg-amber-50');
+                lyricsArea.classList.add('text-slate-200');
+                lyricsArea.classList.remove('text-slate-900');
+
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+                showToast("Modo Stage Ativado (Confortável para Altar)");
+            }
+        }
+    </script>
 </body>
 </html>
