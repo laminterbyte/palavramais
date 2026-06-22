@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Estudos - Palavra Mais</title>
+    <title>Downloads - Palavra Mais</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: #f8f9fa; color: #333333; display: flex; flex-direction: column; min-height: 100vh; overflow-x: hidden; }
@@ -19,18 +19,13 @@
         .menu a:hover { background-color: #f0f4f8; color: #1a365d; }
         .menu .active { background-color: #1a365d; color: #ffffff; }
 
-        /* SEÇÃO DE PRODUTOS/CARDS */
-        .main-content { flex: 1; max-width: 1200px; width: 100%; margin: 40px auto; padding: 0 20px; }
-        h1 { color: #1a365d; font-size: 32px; margin-bottom: 25px; font-weight: 800; text-align: center; }
-        
-        .study-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 30px; }
-        .study-card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); display: flex; flex-direction: column; }
-        .study-card img { width: 100%; height: 220px; object-fit: cover; }
-        .study-info { padding: 25px; flex: 1; display: flex; flex-direction: column; }
-        .study-info h2 { color: #1a365d; font-size: 20px; margin-bottom: 10px; }
-        .study-info p { color: #4a5568; font-size: 14px; line-height: 1.6; margin-bottom: 20px; }
-        .study-btn { margin-top: auto; background: #1a365d; color: white; text-decoration: none; text-align: center; padding: 12px; border-radius: 6px; font-weight: 600; transition: background 0.2s; }
-        .study-btn:hover { background: #2a4365; }
+        .main-content { flex: 1; max-width: 1000px; width: 100%; margin: 40px auto; padding: 0 20px; }
+        .dl-card { background: white; border-radius: 12px; padding: 40px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); text-align: center; }
+        h1 { color: #1a365d; font-size: 32px; margin-bottom: 20px; font-weight: 800; }
+        .dl-list { list-style: none; margin-top: 30px; }
+        .dl-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid #e2e8f0; }
+        .dl-link { background: #1a365d; color: white; text-decoration: none; padding: 8px 16px; border-radius: 6px; font-size: 14px; font-weight: bold; }
+        .dl-link:hover { background: #2a4365; }
 
         footer { background-color: #1a365d; color: #ffffff; text-align: center; padding: 12px; font-size: 13px; margin-top: auto; }
         
@@ -38,7 +33,7 @@
             header { height: auto; } .nav-container { flex-direction: column; gap: 15px; padding: 15px 20px; }
             .logo { position: relative; top: 0; left: 0; } .logo img { height: 90px; margin: 0 auto; border-radius: 12px; }
             nav { width: 100%; justify-content: center; } .menu { flex-wrap: wrap; justify-content: center; gap: 8px; }
-            .study-grid { grid-template-columns: 1fr; }
+            .dl-item { flex-direction: column; gap: 10px; text-align: center; }
         }
     </style>
 </head>
@@ -50,10 +45,10 @@
                 <ul class="menu">
                     <li><a href="index.html">Início</a></li>
                     <li><a href="quemsomos.html">Quem Somos</a></li>
-                    <li><a href="estudos.html" class="active">Estudos</a></li>
+                    <li><a href="estudos.html">Estudos</a></li>
                     <li><a href="entretenimento.html">Entretenimento</a></li>
                     <li><a href="dicas.html">Dicas e Inovações</a></li>
-                    <li><a href="downloads.html">Downloads</a></li>
+                    <li><a href="downloads.html" class="active">Downloads</a></li>
                     <li><a href="ministerios.html">Ministérios</a></li>
                 </ul>
             </nav>
@@ -61,24 +56,19 @@
     </header>
 
     <main class="main-content">
-        <h1>Nossos Materiais de Estudo</h1>
-        <div class="study-grid">
-            <div class="study-card">
-                <img src="imagens/carrossel-estudo.jpg" alt="Estudos Bíblicos">
-                <div class="study-info">
-                    <h2>Estudos Bíblicos e Doutrinários</h2>
-                    <p>Aprofunde seus conhecimentos nas Escrituras Sagradas com lições fundamentadas, esboços prontos para sermões e materiais didáticos ideais para a Escola Bíblica Dominical ou Pequenos Grupos.</p>
-                    <a href="#" class="study-btn">Explorar Estudos</a>
+        <div class="dl-card">
+            <h1>Central de Downloads</h1>
+            <p>Baixe gratuitamente apostilas, planilhas organizacionais e criativos prontos para as redes sociais da sua comunidade.</p>
+            <ul class="dl-list">
+                <div class="dl-item">
+                    <span>E-book: Fundamentos da Liderança de Louvor (PDF)</span>
+                    <a href="#" class="dl-link">Baixar</a>
                 </div>
-            </div>
-            <div class="study-card">
-                <img src="imagens/carrossel-musical.jpg" alt="Estudo Musical">
-                <div class="study-info">
-                    <h2>Estudo Musical e Adoração</h2>
-                    <p>Cursos, dicas práticas e teorias de canto e instrumentos musicais preparadas especialmente para capacitar músicos locais, líderes de louvor e equipes de adoração instrumental.</p>
-                    <a href="#" class="study-btn">Iniciar Estudo Musical</a>
+                <div class="dl-item">
+                    <span>Tabela Litúrgica e de Escala Anual (XLSX)</span>
+                    <a href="#" class="dl-link">Baixar</a>
                 </div>
-            </div>
+            </ul>
         </div>
     </main>
 
