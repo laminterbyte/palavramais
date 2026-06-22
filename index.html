@@ -3,543 +3,173 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Palavra Mais - Página Inicial</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Palavra Mais - Portal Evangélico</title>
     <style>
-        /* Reset e estilos gerais */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #f8f9fa; color: #333333; display: flex; flex-direction: column; min-height: 100vh; overflow-x: hidden; }
         
-        body {
-            background-color: #f5f5f5;
-            color: #333;
-            line-height: 1.6;
+        /* CABEÇALHO FIXO COM LOGO FLUTUANTE */
+        header { background-color: #ffffff; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 1000; height: 75px; }
+        .nav-container { max-width: 1300px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; height: 100%; position: relative; }
+     
+        /* LOGO ARREDONDADO E DESLOCADO MAIS PARA CIMA */
+        .logo { 
+            position: absolute; 
+            top: -15px; /* Moveu o logo um pouco mais para cima */ 
+            left: 20px; 
+            z-index: 1010; 
         }
-        
-        .container {
-            width: 100%;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
+        .logo a { display: block; text-decoration: none; }
+        .logo img { 
+            height: 120px; 
+            width: auto; 
+            display: block; 
+            object-fit: contain; 
+            border-radius: 20px; /* Arredondamento para não parecer tão retangular */
+            background-color: #ffffff; /* Fundo branco sutil para dar acabamento ao contorno arredondado */
+            padding: 5px; /* Espaço interno para o design respirar dentro do contorno */
+            filter: drop-shadow(0px 8px 16px rgba(0,0,0,0.18)); 
+            transition: transform 0.3s ease; 
         }
+        .logo img:hover { transform: scale(1.03); }
+
+        /* LOGO SAINDO DAS MARGENS DA NAVBAR */
+        .logo { position: absolute; top: 10px; left: 20px; z-index: 1010; }
+        .logo a { display: block; text-decoration: none; }
+        .logo img { height: 130px; width: auto; display: block; object-fit: contain; filter: drop-shadow(0px 8px 12px rgba(0,0,0,0.15)); transition: transform 0.3s ease; }
+        .logo img:hover { transform: scale(1.03); }
         
-        /* Cabeçalho e Navegação */
-        header {
-            background-color: #2c3e50;
-            position: fixed;
-            top: 0;
-            width: 100%;
-            z-index: 1000;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-        }
+        /* MENU ESTILIZADO EM FORMATO DE BOTÕES */
+        nav { margin-left: auto; height: 100%; display: flex; align-items: center; }
+        .menu { display: flex; list-style: none; gap: 12px; }
+        .menu a { text-decoration: none; color: #4a5568; font-weight: 600; font-size: 14px; padding: 8px 16px; border-radius: 20px; transition: all 0.3s ease; border: 1px solid transparent; }
+        .menu a:hover { background-color: #f0f4f8; color: #1a365d; }
+        .menu .active { background-color: #1a365d; color: #ffffff; box-shadow: 0 4px 10px rgba(26, 54, 93, 0.2); }
         
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 0;
-        }
+        /* CARROSSEL AMPLIADO PARA COMPUTADORES */
+        .carousel-wrapper { max-width: 1300px; width: 100%; margin: 20px auto 15px auto; position: relative; padding: 0 50px; }
+        .carousel-container { width: 100%; position: relative; overflow: hidden; background-color: #e2e8f0; height: 380px; border-radius: 12px; box-shadow: 0 6px 20px rgba(0,0,0,0.08); }
+        .carousel-slide { display: flex; width: 500%; height: 100%; transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+        .carousel-item { width: 20%; height: 100%; position: relative; }
+        .carousel-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .carousel-caption { position: absolute; bottom: 35px; left: 5%; background-color: rgba(26, 54, 93, 0.92); backdrop-filter: blur(4px); color: #ffffff; padding: 18px 28px; border-radius: 8px; max-width: 450px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+        .carousel-caption h2 { font-size: 22px; margin-bottom: 6px; font-weight: 700; }
+        .carousel-caption a { color: #fed7d7; text-decoration: none; font-size: 14px; font-weight: bold; display: inline-block; margin-top: 5px; transition: color 0.2s; }
+        .carousel-caption a:hover { color: #ffffff; text-decoration: underline; }
         
-        .logo {
-            display: flex;
-            align-items: center;
-        }
+        .carousel-btn { position: absolute; top: 50%; transform: translateY(-50%); background-color: #ffffff; color: #1a365d; border: none; cursor: pointer; font-size: 18px; border-radius: 50%; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; transition: all 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.15); z-index: 10; }
+        .carousel-btn:hover { background-color: #1a365d; color: #ffffff; transform: translateY(-50%) scale(1.05); }
+        .btn-prev { left: 20px; } .btn-next { right: 20px; }
         
-        .logo img {
-            height: 50px;
-        }
+        /* CONTEÚDO PRINCIPAL (COMPACTADO PARA EVITAR ROLAGEM) */
+        .main-content { flex: 1; max-width: 1300px; width: 100%; margin: 0 auto; padding: 0 20px 20px 20px; text-align: center; display: flex; flex-direction: column; justify-content: center; }
+        .welcome-section { margin-bottom: 15px; }
+        .main-content h1 { color: #1a365d; font-size: 26px; margin-bottom: 6px; font-weight: 800; }
+        .main-content p { color: #4a5568; max-width: 800px; margin: 0 auto; font-size: 14px; line-height: 1.5; }
         
-        .logo h1 {
-            color: white;
-            margin-left: 10px;
-            font-size: 1.5rem;
-        }
+        /* GRID DE TRÊS IMAGENS DE LINKS RÁPIDOS */
+        .links-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; max-width: 1200px; margin: 10px auto 0 auto; width: 100%; }
+        .grid-card { position: relative; height: 140px; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.08); text-decoration: none; display: block; transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .grid-card img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+        .grid-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(to top, rgba(26, 54, 93, 0.85) 20%, rgba(26, 54, 93, 0.3)); display: flex; align-items: flex-end; justify-content: center; padding: 15px; transition: background 0.3s ease; }
+        .grid-card h3 { color: #ffffff; font-size: 18px; font-weight: 700; text-shadow: 0 2px 4px rgba(0,0,0,0.5); letter-spacing: 0.5px; }
         
-        nav ul {
-            display: flex;
-            list-style: none;
-        }
+        /* HOVER DA GRID */
+        .grid-card:hover { transform: translateY(-4px); box-shadow: 0 8px 20px rgba(26, 54, 93, 0.2); }
+        .grid-card:hover img { transform: scale(1.05); }
+        .grid-card:hover .grid-overlay { background: linear-gradient(to top, rgba(26, 54, 93, 0.95) 30%, rgba(26, 54, 93, 0.4)); }
         
-        nav ul li {
-            margin-left: 20px;
-        }
+        footer { background-color: #1a365d; color: #ffffff; text-align: center; padding: 12px; font-size: 13px; margin-top: 15px; }
         
-        nav ul li a {
-            color: white;
-            text-decoration: none;
-            padding: 10px 15px;
-            border-radius: 5px;
-            transition: all 0.3s ease;
-            font-weight: 500;
-        }
-        
-        nav ul li a:hover {
-            background-color: #3498db;
-            transform: translateY(-2px);
-        }
-        
-        nav ul li a.active {
-            background-color: #3498db;
-        }
-        
-        .menu-toggle {
-            display: none;
-            color: white;
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
-        
-        /* Carrossel */
-        .carousel-container {
-            margin-top: 80px;
-            height: 40vh;
-            max-height: 500px;
-            position: relative;
-            overflow: hidden;
-            border-radius: 8px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-        
-        .carousel-slide {
-            display: flex;
-            width: 500%;
-            height: 100%;
-            transition: transform 0.5s ease-in-out;
-        }
-        
-        .carousel-item {
-            width: 20%;
-            height: 100%;
-            position: relative;
-        }
-        
-        .carousel-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        
-        .carousel-caption {
-            position: absolute;
-            bottom: 20px;
-            left: 20px;
-            color: white;
-            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
-            max-width: 60%;
-        }
-        
-        .carousel-caption h2 {
-            font-size: 1.8rem;
-            margin-bottom: 10px;
-        }
-        
-        .carousel-nav {
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
-            display: flex;
-        }
-        
-        .carousel-dot {
-            width: 12px;
-            height: 12px;
-            background-color: rgba(255, 255, 255, 0.5);
-            border-radius: 50%;
-            margin: 0 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-        
-        .carousel-dot.active {
-            background-color: white;
-        }
-        
-        .carousel-btn {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background-color: rgba(0, 0, 0, 0.5);
-            color: white;
-            border: none;
-            padding: 15px;
-            cursor: pointer;
-            font-size: 1.5rem;
-            transition: background-color 0.3s ease;
-            z-index: 10;
-        }
-        
-        .carousel-btn:hover {
-            background-color: rgba(0, 0, 0, 0.8);
-        }
-        
-        .carousel-btn.prev {
-            left: 10px;
-        }
-        
-        .carousel-btn.next {
-            right: 10px;
-        }
-        
-        /* Conteúdo principal */
-        main {
-            padding: 40px 0;
-        }
-        
-        .welcome-section {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-        
-        .welcome-section h2 {
-            font-size: 2.2rem;
-            color: #2c3e50;
-            margin-bottom: 20px;
-        }
-        
-        .welcome-section p {
-            font-size: 1.1rem;
-            max-width: 800px;
-            margin: 0 auto 25px;
-        }
-        
-        .btn {
-            display: inline-block;
-            background-color: #3498db;
-            color: white;
-            padding: 12px 25px;
-            border-radius: 5px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            border: none;
-            cursor: pointer;
-        }
-        
-        .btn:hover {
-            background-color: #2980b9;
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-        
-        .features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            margin-top: 40px;
-        }
-        
-        .feature-card {
-            background-color: white;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        
-        .feature-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-        }
-        
-        .feature-img {
-            height: 200px;
-            overflow: hidden;
-        }
-        
-        .feature-img img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.5s ease;
-        }
-        
-        .feature-card:hover .feature-img img {
-            transform: scale(1.05);
-        }
-        
-        .feature-content {
-            padding: 20px;
-        }
-        
-        .feature-content h3 {
-            color: #2c3e50;
-            margin-bottom: 15px;
-            font-size: 1.4rem;
-        }
-        
-        /* Rodapé */
-        footer {
-            background-color: #2c3e50;
-            color: white;
-            text-align: center;
-            padding: 20px 0;
-            margin-top: 40px;
-        }
-        
-        /* Responsividade */
+        /* ADAPTAÇÃO TOTAL PARA DISPOSITIVOS MÓVEIS */
         @media (max-width: 992px) {
-            .carousel-caption h2 {
-                font-size: 1.5rem;
-            }
-        }
-        
-        @media (max-width: 768px) {
-            .menu-toggle {
-                display: block;
-            }
-            
-            nav ul {
-                position: fixed;
-                top: 80px;
-                left: -100%;
-                width: 100%;
-                height: calc(100vh - 80px);
-                background-color: #2c3e50;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                transition: left 0.3s ease;
-            }
-            
-            nav ul.active {
-                left: 0;
-            }
-            
-            nav ul li {
-                margin: 15px 0;
-            }
-            
-            .carousel-caption {
-                max-width: 80%;
-            }
-            
-            .carousel-caption h2 {
-                font-size: 1.3rem;
-            }
-            
-            .carousel-caption p {
-                font-size: 0.9rem;
-            }
-        }
-        
-        @media (max-width: 576px) {
-            .logo h1 {
-                font-size: 1.2rem;
-            }
-            
-            .carousel-caption {
-                bottom: 10px;
-                left: 10px;
-            }
-            
-            .carousel-caption h2 {
-                font-size: 1.1rem;
-            }
-            
-            .carousel-caption p {
-                display: none;
-            }
-            
-            .welcome-section h2 {
-                font-size: 1.8rem;
-            }
+            .links-grid { grid-template-columns: 1fr; gap: 15px; }
+            .grid-card { height: 120px; }
+            header { height: auto; }
+            .nav-container { flex-direction: column; gap: 15px; padding: 15px 20px; }
+            .logo { position: relative; top: 0; left: 0; }
+            .logo img { height: 90px; margin: 0 auto; }
+            nav { width: 100%; justify-content: center; }
+            .menu { flex-wrap: wrap; justify-content: center; gap: 8px; }
+            .carousel-wrapper { padding: 0 10px; margin: 10px auto; }
+            .carousel-container { height: 240px; }
+            .carousel-btn { display: none; }
+            .carousel-caption { bottom: 10px; left: 0; right: 0; margin: 0 auto; width: 90%; padding: 12px; text-align: center; }
+            .carousel-caption h2 { font-size: 18px; }
         }
     </style>
 </head>
 <body>
-    <!-- Cabeçalho com menu fixo -->
     <header>
-        <div class="container header-content">
+        <div class="nav-container">
             <div class="logo">
-                <!-- Logo placeholder - substitua pelo seu logo -->
-                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjUwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjx0ZXh0IHg9IjEwIiB5PSIzMCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjI0IiBmaWxsPSIjMzQ5OGRiIj5QYWxhdnJhIE1haXM8L3RleHQ+PC9zdmc+" alt="Logo Palavra Mais">
-                <h1>Palavra Mais</h1>
+                <a href="index.html">
+                    <img src="logo_Palavra.png" alt="Palavra Mais">
+                </a>
             </div>
-            
-            <div class="menu-toggle" id="menuToggle">
-                <i class="fas fa-bars"></i>
-            </div>
-            
             <nav>
-                <ul id="menu">
+                <ul class="menu">
                     <li><a href="index.html" class="active">Início</a></li>
+                    <li><a href="quemsomos.html">Quem Somos</a></li>
                     <li><a href="estudos.html">Estudos</a></li>
-                    <li><a href="novidades.html">Novidades</a></li>
-                    <li><a href="entretenimentos.html">Entretenimentos</a></li>
-                    <li><a href="contato.html">Contato</a></li>
+                    <li><a href="entretenimento.html">Entretenimento</a></li>
+                    <li><a href="dicas.html">Dicas e Inovações</a></li>
+                    <li><a href="downloads.html">Downloads</a></li>
+                    <li><a href="ministerios.html">Ministérios</a></li>
                 </ul>
             </nav>
         </div>
     </header>
 
-    <!-- Conteúdo principal -->
-    <main>
-        <div class="container">
-            <!-- Carrossel -->
-            <div class="carousel-container">
-                <div class="carousel-slide">
-                    <div class="carousel-item">
-                        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iODAwIiBoZWlnaHQ9IjQwMCIgZmlsbD0iIzM0OThkYiIvPjx0ZXh0IHg9IjQwMCIgeT0iMjAwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMjQiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5JbWFnZW0gMTwvdGV4dD48L3N2Zz4=" alt="Imagem 1">
-                        <div class="carousel-caption">
-                            <h2>Bem-vindo ao Palavra Mais</h2>
-                            <p>Seu portal de conteúdo cristão</p>
-                        </div>
-                    </div>
-                    <div class="carousel-item">
-                        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iODAwIiBoZWlnaHQ9IjQwMCIgZmlsbD0iIzJjM2U1MCIvPjx0ZXh0IHg9IjQwMCIgeT0iMjAwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMjQiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5JbWFnZW0gMjwvdGV4dD48L3N2Zz4=" alt="Imagem 2">
-                        <div class="carousel-caption">
-                            <h2>Estudos Bíblicos</h2>
-                            <p>Materiais para seu crescimento espiritual</p>
-                        </div>
-                    </div>
-                    <div class="carousel-item">
-                        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iODAwIiBoZWlnaHQ9IjQwMCIgZmlsbD0iIzE2YTZlNiIvPjx0ZXh0IHg9IjQwMCIgeT0iMjAwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMjQiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5JbWFnZW0gMzwvdGV4dD48L3N2Zz4=" alt="Imagem 3">
-                        <div class="carousel-caption">
-                            <h2>Últimas Novidades</h2>
-                            <p>Fique por dentro do que acontece</p>
-                        </div>
-                    </div>
-                    <div class="carousel-item">
-                        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iODAwIiBoZWlnaHQ9IjQwMCIgZmlsbD0iIzI3Y2M4YyIvPjx0ZXh0IHg9IjQwMCIgeT0iMjAwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMjQiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5JbWFnZW0gNDwvdGV4dD48L3N2Zz4=" alt="Imagem 4">
-                        <div class="carousel-caption">
-                            <h2>Entretenimento Saudável</h2>
-                            <p>Conteúdo para toda a família</p>
-                        </div>
-                    </div>
-                    <div class="carousel-item">
-                        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iODAwIiBoZWlnaHQ9IjQwMCIgZmlsbD0iIzhlNDRjMyIvPjx0ZXh0IHg9IjQwMCIgeT0iMjAwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMjQiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5JbWFnZW0gNTwvdGV4dD48L3N2Zz4=" alt="Imagem 5">
-                        <div class="carousel-caption">
-                            <h2>Fale Conosco</h2>
-                            <p>Entre em contato com nossa equipe</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <button class="carousel-btn prev" onclick="moveSlide(-1)">&#10094;</button>
-                <button class="carousel-btn next" onclick="moveSlide(1)">&#10095;</button>
-                
-                <div class="carousel-nav">
-                    <span class="carousel-dot active" onclick="goToSlide(0)"></span>
-                    <span class="carousel-dot" onclick="goToSlide(1)"></span>
-                    <span class="carousel-dot" onclick="goToSlide(2)"></span>
-                    <span class="carousel-dot" onclick="goToSlide(3)"></span>
-                    <span class="carousel-dot" onclick="goToSlide(4)"></span>
-                </div>
+    <div class="carousel-wrapper">
+        <div class="carousel-container">
+            <div class="carousel-slide" id="slideTrack">
+                <div class="carousel-item"><img src="imagens/carrossel-estudo.jpg" alt="Estudo Bíblico"><div class="carousel-caption"><h2>Estudos Bíblicos</h2><a href="estudos.html">Acesse os materiais de estudo &rarr;</a></div></div>
+                <div class="carousel-item"><img src="imagens/carrossel-jogo.jpg" alt="Jogo Conquistando as Coras"><div class="carousel-caption"><h2>Jogo Conquistando as Coras</h2><a href="entretenimento.html">Adquira o jogo de tabuleiro &rarr;</a></div></div>
+                <div class="carousel-item"><img src="imagens/carrossel-inovacoes.jpg" alt="Dicas e Inovações"><div class="carousel-caption"><h2>Dicas e Inovações</h2><a href="dicas.html">Veja as atualidades do meio &rarr;</a></div></div>
+                <div class="carousel-item"><img src="imagens/carrossel-musical.jpg" alt="Estudo Musical"><div class="carousel-caption"><h2>Estudo Musical</h2><a href="estudos.html">Canto e Instrumentos musicais &rarr;</a></div></div>
+                <div class="carousel-item"><img src="imagens/carrossel-ministerios.jpg" alt="Ministérios"><div class="carousel-caption"><h2>Nossos Ministérios</h2><a href="ministerios.html">Conheça as áreas da igreja &rarr;</a></div></div>
             </div>
-            
-            <!-- Seção de boas-vindas -->
-            <section class="welcome-section">
-                <h2>Bem-vindo ao Palavra Mais</h2>
-                <p>Somos um portal dedicado a oferecer conteúdo cristão de qualidade para edificação, entretenimento e informação. Explore nossas seções e descubra materiais que irão enriquecer sua vida espiritual.</p>
-                <a href="sobre.html" class="btn">Saiba mais sobre nós</a>
-            </section>
-            
-            <!-- Seção de recursos -->
-            <section class="features">
-                <div class="feature-card">
-                    <div class="feature-img">
-                        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iIzM0OThkYiIvPjx0ZXh0IHg9IjIwMCIgeT0iMTAwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTgiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5Fc3R1ZG9zIEJpYmxpY29zPC90ZXh0Pjwvc3ZnPg==" alt="Estudos Bíblicos">
-                    </div>
-                    <div class="feature-content">
-                        <h3>Estudos Bíblicos</h3>
-                        <p>Materiais profundos e reflexivos para seu crescimento espiritual e entendimento da Palavra de Deus.</p>
-                        <a href="estudos.html" class="btn">Acessar Estudos</a>
-                    </div>
+        </div>
+        <button class="carousel-btn btn-prev" onclick="moveSlide(-1)">&#10094;</button>
+        <button class="carousel-btn btn-next" onclick="moveSlide(1)">&#10095;</button>
+    </div>
+
+    <main class="main-content">
+        <div class="welcome-section">
+            <h1>Bem-vindo ao Palavra Mais</h1>
+            <p>Tudo relacionado à igreja evangélica em um só lugar. Explore nossos estudos básicos, musicais e tecnológicos, divirta-se com nossa área de entretenimento e conheça nossos ministérios.</p>
+        </div>
+
+        <!-- GRID DE ACESSO RÁPIDO - DIRETO NA TELA DO PC -->
+        <div class="links-grid">
+            <a href="entretenimento.html" class="grid-card">
+                <img src="imagens/grid-entretenimento.jpg" alt="Entretenimento">
+                <div class="grid-overlay">
+                    <h3>Entretenimento</h3>
                 </div>
-                
-                <div class="feature-card">
-                    <div class="feature-img">
-                        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iIzJjM2U1MCIvPjx0ZXh0IHg9IjIwMCIgeT0iMTAwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTgiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5Ob3ZpZGFkZXM8L3RleHQ+PC9zdmc+" alt="Novidades">
-                    </div>
-                    <div class="feature-content">
-                        <h3>Novidades</h3>
-                        <p>Fique por dentro das últimas notícias, eventos e lançamentos do mundo cristão.</p>
-                        <a href="novidades.html" class="btn">Ver Novidades</a>
-                    </div>
+            </a>
+            <a href="estudos.html" class="grid-card">
+                <img src="imagens/grid-estudo-musical.jpg" alt="Estudo Musical">
+                <div class="grid-overlay">
+                    <h3>Estudo Musical</h3>
                 </div>
-                
-                <div class="feature-card">
-                    <div class="feature-img">
-                        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iIzE2YTZlNiIvPjx0ZXh0IHg9IjIwMCIgeT0iMTAwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTgiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5FbnRyZXRlbmltZW50b3M8L3RleHQ+PC9zdmc+" alt="Entretenimentos">
-                    </div>
-                    <div class="feature-content">
-                        <h3>Entretenimentos</h3>
-                        <p>Conteúdo leve e saudável para toda a família: música, filmes, livros e muito mais.</p>
-                        <a href="entretenimentos.html" class="btn">Ver Conteúdos</a>
-                    </div>
+            </a>
+            <a href="ministerios.html" class="grid-card">
+                <img src="imagens/grid-ministerios.jpg" alt="Ministérios">
+                <div class="grid-overlay">
+                    <h3>Ministérios</h3>
                 </div>
-            </section>
+            </a>
         </div>
     </main>
 
-    <!-- Rodapé -->
-    <footer>
-        <div class="container">
-            <p>&copy; 2023 Palavra Mais. Todos os direitos reservados.</p>
-        </div>
-    </footer>
+    <footer><p>&copy; 2026 Palavra Mais - <a href="http://www.palavramais.com.br" style="color: #fff; text-decoration: none; font-weight: bold;">palavramais.com.br</a></p></footer>
 
     <script>
-        // Menu mobile toggle
-        document.getElementById('menuToggle').addEventListener('click', function() {
-            document.getElementById('menu').classList.toggle('active');
-        });
-        
-        // Carrossel automático
-        let slideIndex = 0;
-        const slides = document.querySelectorAll('.carousel-item');
-        const dots = document.querySelectorAll('.carousel-dot');
-        
-        function showSlide(n) {
-            if (n >= slides.length) slideIndex = 0;
-            if (n < 0) slideIndex = slides.length - 1;
-            
-            document.querySelector('.carousel-slide').style.transform = `translateX(-${slideIndex * 20}%)`;
-            
-            // Atualizar dots
-            dots.forEach((dot, index) => {
-                dot.classList.toggle('active', index === slideIndex);
-            });
-        }
-        
-        function moveSlide(n) {
-            slideIndex += n;
-            showSlide(slideIndex);
-            resetAutoSlide();
-        }
-        
-        function goToSlide(n) {
-            slideIndex = n;
-            showSlide(slideIndex);
-            resetAutoSlide();
-        }
-        
-        // Avançar automaticamente a cada 5 segundos
-        let autoSlideInterval = setInterval(() => {
-            slideIndex++;
-            showSlide(slideIndex);
-        }, 5000);
-        
-        function resetAutoSlide() {
-            clearInterval(autoSlideInterval);
-            autoSlideInterval = setInterval(() => {
-                slideIndex++;
-                showSlide(slideIndex);
-            }, 5000);
-        }
-        
-        // Pausar carrossel quando o mouse estiver sobre ele
-        document.querySelector('.carousel-container').addEventListener('mouseenter', () => {
-            clearInterval(autoSlideInterval);
-        });
-        
-        document.querySelector('.carousel-container').addEventListener('mouseleave', () => {
-            resetAutoSlide();
-        });
+        let currentIndex = 0; const totalSlides = 5; const track = document.getElementById('slideTrack');
+        function moveSlide(direction) { currentIndex += direction; if (currentIndex >= totalSlides) { currentIndex = 0; } else if (currentIndex < 0) { currentIndex = totalSlides - 1; } const amountToMove = -currentIndex * 20; track.style.transform = `translateX(${amountToMove}%)`; }
+        setInterval(() => { moveSlide(1); }, 6000);
     </script>
 </body>
 </html>
