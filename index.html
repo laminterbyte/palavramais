@@ -81,6 +81,43 @@
         
         footer { background-color: #1a365d; color: #ffffff; text-align: center; padding: 12px; font-size: 13px; margin-top: 15px; }
         
+        /* --- ADICIONE ISTO ANTES DO @media --- */
+        /* ÍCONE DO MENU MOBILE (Oculto no Computador) */
+        .menu-icon { display: none; font-size: 32px; color: #1a365d; cursor: pointer; user-select: none; }
+
+        /* --- SUBSTITUA TODO O SEU BLOCO @media (max-width: 992px) POR ESTE --- */
+        @media (max-width: 992px) {
+            header { height: auto; padding: 10px 0; }
+            .nav-container { flex-direction: row; flex-wrap: wrap; justify-content: space-between; align-items: center; padding: 0 20px; }
+            
+            /* Ajusta o logotipo para o celular */
+            .logo { position: relative; top: 0; left: 0; }
+            .logo img { height: 60px; border-radius: 12px; padding: 0; filter: drop-shadow(0px 4px 8px rgba(0,0,0,0.1)); }
+            
+            /* Mostra o ícone de hambúrguer */
+            .menu-icon { display: block; }
+            
+            /* Esconde o menu por padrão e prepara para a animação */
+            nav { width: 100%; display: none; margin-top: 15px; }
+            nav.active { display: block; animation: fadeIn 0.3s ease; }
+            
+            .menu { flex-direction: column; gap: 8px; background-color: #ffffff; padding: 15px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
+            .menu a { text-align: center; padding: 12px; font-size: 16px; display: block; border-radius: 8px; }
+            
+            /* Regras dos conteúdos das páginas para celular */
+            .links-grid { grid-template-columns: 1fr; gap: 15px; }
+            .grid-card { height: 120px; }
+            .carousel-wrapper { padding: 0 10px; margin: 10px auto; }
+            .carousel-container { height: 240px; }
+            .carousel-btn { display: none; }
+            .carousel-caption { bottom: 10px; left: 0; right: 0; margin: 0 auto; width: 90%; padding: 12px; text-align: center; }
+            .carousel-caption h2 { font-size: 18px; }
+            .min-grid { grid-template-columns: 1fr; }
+            .min-card { height: 130px; }
+        }
+        
+        /* Animação suave para o menu abrindo */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
         /* ADAPTAÇÃO TOTAL PARA DISPOSITIVOS MÓVEIS */
         @media (max-width: 992px) {
             .links-grid { grid-template-columns: 1fr; gap: 15px; }
