@@ -11,34 +11,16 @@
         /* CABEÇALHO FIXO COM LOGO FLUTUANTE */
         header { background-color: #ffffff; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 1000; height: 75px; }
         .nav-container { max-width: 1300px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; height: 100%; position: relative; }
-     
-        /* LOGO ARREDONDADO E DESLOCADO MAIS PARA CIMA */
-        .logo { 
-            position: absolute; 
-            top: -15px; /* Moveu o logo um pouco mais para cima */ 
-            left: 20px; 
-            z-index: 1010; 
-        }
+        
+        /* LOGO ARREDONDADO E DESLOCADO MAIS PARA CIMA NO PC */
+        .logo { position: absolute; top: -15px; left: 20px; z-index: 1010; }
         .logo a { display: block; text-decoration: none; }
-        .logo img { 
-            height: 120px; 
-            width: auto; 
-            display: block; 
-            object-fit: contain; 
-            border-radius: 20px; /* Arredondamento para não parecer tão retangular */
-            background-color: #ffffff; /* Fundo branco sutil para dar acabamento ao contorno arredondado */
-            padding: 5px; /* Espaço interno para o design respirar dentro do contorno */
-            filter: drop-shadow(0px 8px 16px rgba(0,0,0,0.18)); 
-            transition: transform 0.3s ease; 
-        }
-        .logo img:hover { transform: scale(1.03); }
-
-        /* LOGO SAINDO DAS MARGENS DA NAVBAR */
-        .logo { position: absolute; top: 10px; left: 20px; z-index: 1010; }
-        .logo a { display: block; text-decoration: none; }
-        .logo img { height: 130px; width: auto; display: block; object-fit: contain; filter: drop-shadow(0px 8px 12px rgba(0,0,0,0.15)); transition: transform 0.3s ease; }
+        .logo img { height: 120px; width: auto; display: block; object-fit: contain; border-radius: 20px; background-color: #ffffff; padding: 5px; filter: drop-shadow(0px 8px 16px rgba(0,0,0,0.18)); transition: transform 0.3s ease; }
         .logo img:hover { transform: scale(1.03); }
         
+        /* ÍCONE DO MENU MOBILE (Oculto no Computador) */
+        .menu-icon { display: none; font-size: 32px; color: #1a365d; cursor: pointer; user-select: none; }
+
         /* MENU ESTILIZADO EM FORMATO DE BOTÕES */
         nav { margin-left: auto; height: 100%; display: flex; align-items: center; }
         .menu { display: flex; list-style: none; gap: 12px; }
@@ -61,7 +43,7 @@
         .carousel-btn:hover { background-color: #1a365d; color: #ffffff; transform: translateY(-50%) scale(1.05); }
         .btn-prev { left: 20px; } .btn-next { right: 20px; }
         
-        /* CONTEÚDO PRINCIPAL (COMPACTADO PARA EVITAR ROLAGEM) */
+        /* CONTEÚDO PRINCIPAL (COMPACTADO PARA EVITAR ROLAGEM NO PC) */
         .main-content { flex: 1; max-width: 1300px; width: 100%; margin: 0 auto; padding: 0 20px 20px 20px; text-align: center; display: flex; flex-direction: column; justify-content: center; }
         .welcome-section { margin-bottom: 15px; }
         .main-content h1 { color: #1a365d; font-size: 26px; margin-bottom: 6px; font-weight: 800; }
@@ -81,30 +63,29 @@
         
         footer { background-color: #1a365d; color: #ffffff; text-align: center; padding: 12px; font-size: 13px; margin-top: 15px; }
         
-       /* --- ADICIONE ISTO ANTES DO @media --- */
-        /* ÍCONE DO MENU MOBILE (Oculto no Computador) */
-        .menu-icon { display: none; font-size: 32px; color: #1a365d; cursor: pointer; user-select: none; }
-
-        /* --- SUBSTITUA TODO O SEU BLOCO @media (max-width: 992px) POR ESTE --- */
+        /* ADAPTAÇÃO TOTAL E OTIMIZADA PARA DISPOSITIVOS MÓVEIS (CELULAR) */
         @media (max-width: 992px) {
-            header { height: auto; padding: 10px 0; }
-            .nav-container { flex-direction: row; flex-wrap: wrap; justify-content: space-between; align-items: center; padding: 0 20px; }
+            header { height: auto; padding: 12px 0; }
             
-            /* Ajusta o logotipo para o celular */
-            .logo { position: relative; top: 0; left: 0; }
-            .logo img { height: 60px; border-radius: 12px; padding: 0; filter: drop-shadow(0px 4px 8px rgba(0,0,0,0.1)); }
+            /* Mantém o logo e o ícone na mesma linha, nas pontas opostas */
+            .nav-container { flex-direction: row; flex-wrap: nowrap; justify-content: space-between; align-items: center; padding: 0 20px; }
             
-            /* Mostra o ícone de hambúrguer */
-            .menu-icon { display: block; }
+            /* Reseta a flutuação do logo para organizar lado a lado */
+            .logo { position: static; top: 0; left: 0; }
+            .logo img { height: 50px; border-radius: 10px; padding: 0; filter: drop-shadow(0px 4px 6px rgba(0,0,0,0.1)); }
             
-            /* Esconde o menu por padrão e prepara para a animação */
-            nav { width: 100%; display: none; margin-top: 15px; }
-            nav.active { display: block; animation: fadeIn 0.3s ease; }
+            /* Mostra as 3 barrinhas no canto superior direito */
+            .menu-icon { display: block; margin-left: auto; padding: 5px; z-index: 1020; }
             
-            .menu { flex-direction: column; gap: 8px; background-color: #ffffff; padding: 15px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
+            /* Menu como camada flutuante logo abaixo do topo do cabeçalho */
+            nav { position: absolute; top: 70px; left: 0; width: 100%; display: none; padding: 0 20px; z-index: 1000; }
+            nav.active { display: block; animation: fadeIn 0.25s ease-out; }
+            
+            /* Menu em formato de caixa flutuante */
+            .menu { flex-direction: column; gap: 8px; background-color: #ffffff; padding: 15px; border-radius: 12px; box-shadow: 0 8px 25px rgba(0,0,0,0.12); border: 1px solid #e2e8f0; }
             .menu a { text-align: center; padding: 12px; font-size: 16px; display: block; border-radius: 8px; }
             
-            /* Regras dos conteúdos das páginas para celular */
+            /* Otimizações das sessões de conteúdo do site */
             .links-grid { grid-template-columns: 1fr; gap: 15px; }
             .grid-card { height: 120px; }
             .carousel-wrapper { padding: 0 10px; margin: 10px auto; }
@@ -112,66 +93,14 @@
             .carousel-btn { display: none; }
             .carousel-caption { bottom: 10px; left: 0; right: 0; margin: 0 auto; width: 90%; padding: 12px; text-align: center; }
             .carousel-caption h2 { font-size: 18px; }
-            .min-grid { grid-template-columns: 1fr; }
-            .min-card { height: 130px; }
         }
         
-        /* Animação suave para o menu abrindo */
+        /* Animação suave para o menu mobile abrindo */
         @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* --- SUBSTITUA TODO O SEU BLOCO @media (max-width: 992px) POR ESTE --- */
-        @media (max-width: 992px) {
-            header { height: auto; padding: 10px 0; }
-            .nav-container { flex-direction: row; flex-wrap: wrap; justify-content: space-between; align-items: center; padding: 0 20px; }
-            
-            /* Ajusta o logotipo para o celular */
-            .logo { position: relative; top: 0; left: 0; }
-            .logo img { height: 60px; border-radius: 12px; padding: 0; filter: drop-shadow(0px 4px 8px rgba(0,0,0,0.1)); }
-            
-            /* Mostra o ícone de hambúrguer */
-            .menu-icon { display: block; }
-            
-            /* Esconde o menu por padrão e prepara para a animação */
-            nav { width: 100%; display: none; margin-top: 15px; }
-            nav.active { display: block; animation: fadeIn 0.3s ease; }
-            
-            .menu { flex-direction: column; gap: 8px; background-color: #ffffff; padding: 15px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
-            .menu a { text-align: center; padding: 12px; font-size: 16px; display: block; border-radius: 8px; }
-            
-            /* Regras dos conteúdos das páginas para celular */
-            .links-grid { grid-template-columns: 1fr; gap: 15px; }
-            .grid-card { height: 120px; }
-            .carousel-wrapper { padding: 0 10px; margin: 10px auto; }
-            .carousel-container { height: 240px; }
-            .carousel-btn { display: none; }
-            .carousel-caption { bottom: 10px; left: 0; right: 0; margin: 0 auto; width: 90%; padding: 12px; text-align: center; }
-            .carousel-caption h2 { font-size: 18px; }
-            .min-grid { grid-template-columns: 1fr; }
-            .min-card { height: 130px; }
-        }
-        
-        /* Animação suave para o menu abrindo */
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
-        /* ADAPTAÇÃO TOTAL PARA DISPOSITIVOS MÓVEIS */
-        @media (max-width: 992px) {
-            .links-grid { grid-template-columns: 1fr; gap: 15px; }
-            .grid-card { height: 120px; }
-            header { height: auto; }
-            .nav-container { flex-direction: column; gap: 15px; padding: 15px 20px; }
-            .logo { position: relative; top: 0; left: 0; }
-            .logo img { height: 90px; margin: 0 auto; }
-            nav { width: 100%; justify-content: center; }
-            .menu { flex-wrap: wrap; justify-content: center; gap: 8px; }
-            .carousel-wrapper { padding: 0 10px; margin: 10px auto; }
-            .carousel-container { height: 240px; }
-            .carousel-btn { display: none; }
-            .carousel-caption { bottom: 10px; left: 0; right: 0; margin: 0 auto; width: 90%; padding: 12px; text-align: center; }
-            .carousel-caption h2 { font-size: 18px; }
-        }
     </style>
 </head>
 <body>
-<header>
+    <header>
         <div class="nav-container">
             <div class="logo">
                 <a href="index.html">
@@ -179,13 +108,11 @@
                 </a>
             </div>
             
-            <!-- BOTÃO HAMBÚRGUER (Aparece só no celular) -->
+            <!-- BOTÃO HAMBÚRGUER (Visível na parte superior direita no celular) -->
             <div class="menu-icon" onclick="toggleMenu()">&#9776;</div>
             
-            <!-- NAVEGAÇÃO -->
             <nav id="mobile-nav">
                 <ul class="menu">
-                    <!-- Lembre-se de mudar a class="active" de acordo com a página -->
                     <li><a href="index.html" class="active">Início</a></li>
                     <li><a href="quemsomos.html">Quem Somos</a></li>
                     <li><a href="estudos.html">Estudos</a></li>
@@ -218,10 +145,11 @@
             <p>Tudo relacionado à igreja evangélica em um só lugar. Explore nossos estudos básicos, musicais e tecnológicos, divirta-se com nossa área de entretenimento e conheça nossos ministérios.</p>
         </div>
 
-        <!-- GRID DE ACESSO RÁPIDO - DIRETO NA TELA DO PC -->
+        <!-- GRID DE ACESSO RÁPIDO - DIRETO NA TELA DO PC SEM ROLAGEM -->
         <div class="links-grid">
             <a href="entretenimento.html" class="grid-card">
-                <img src="imagens/grid-entretenimento.jpg" alt="Entretenimento">
+                <!-- Imagem minimalista gerada para Entretenimento -->
+                <img src="watermarked_img_3200525956247804059.png" alt="Entretenimento">
                 <div class="grid-overlay">
                     <h3>Entretenimento</h3>
                 </div>
@@ -244,10 +172,13 @@
     <footer><p>&copy; 2026 Palavra Mais - <a href="http://www.palavramais.com.br" style="color: #fff; text-decoration: none; font-weight: bold;">palavramais.com.br</a></p></footer>
 
     <script>
+        // Scripts do Carrossel e do Menu responsivo
         let currentIndex = 0; const totalSlides = 5; const track = document.getElementById('slideTrack');
         function moveSlide(direction) { currentIndex += direction; if (currentIndex >= totalSlides) { currentIndex = 0; } else if (currentIndex < 0) { currentIndex = totalSlides - 1; } const amountToMove = -currentIndex * 20; track.style.transform = `translateX(${amountToMove}%)`; }
         setInterval(() => { moveSlide(1); }, 6000);
-      function toggleMenu() {
+
+        // Função para abrir e fechar o menu no celular
+        function toggleMenu() {
             document.getElementById('mobile-nav').classList.toggle('active');
         }
     </script>
