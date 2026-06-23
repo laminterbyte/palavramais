@@ -170,6 +170,9 @@
         let currentIndex = 0; const totalSlides = 5; const track = document.getElementById('slideTrack');
         function moveSlide(direction) { currentIndex += direction; if (currentIndex >= totalSlides) { currentIndex = 0; } else if (currentIndex < 0) { currentIndex = totalSlides - 1; } const amountToMove = -currentIndex * 20; track.style.transform = `translateX(${amountToMove}%)`; }
         setInterval(() => { moveSlide(1); }, 6000);
+        function toggleMenu() {
+            document.getElementById('mobile-nav').classList.toggle('active');
+        }
     </script>
 </body>
 </html>
