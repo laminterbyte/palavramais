@@ -67,12 +67,26 @@
         @media (max-width: 992px) {
             header { height: auto; padding: 12px 0; }
             
-            /* Mantém o logo e o ícone na mesma linha, nas pontas opostas */
+            
+           /* Mantém o logo e o ícone na mesma linha, nas pontas opostas */
             .nav-container { flex-direction: row; flex-wrap: nowrap; justify-content: space-between; align-items: center; padding: 0 20px; }
             
             /* Reseta a flutuação do logo para organizar lado a lado */
             .logo { position: static; top: 0; left: 0; }
             .logo img { height: 50px; border-radius: 10px; padding: 0; filter: drop-shadow(0px 4px 6px rgba(0,0,0,0.1)); }
+            
+            /* Aumenta o tamanho do logo no celular, deixando-o sobressair para baixo */
+            .logo img { 
+                height: 85px; /* Tamanho bem maior e visível no celular */
+                width: auto; 
+                display: block; 
+                object-fit: contain; 
+                border-radius: 12px; 
+                background-color: #ffffff; /* Mantém o fundo branco para dar acabamento ao contorno */
+                padding: 4px; 
+                filter: drop-shadow(0px 6px 10px rgba(0,0,0,0.15)); 
+                transform: translateY(12px); /* Desloca o corpo do logo para baixo, saindo do menu */
+            }
             
             /* Mostra as 3 barrinhas no canto superior direito */
             .menu-icon { display: block; margin-left: auto; padding: 5px; z-index: 1020; }
@@ -128,11 +142,19 @@
     <div class="carousel-wrapper">
         <div class="carousel-container">
             <div class="carousel-slide" id="slideTrack">
+<<<<<<< Updated upstream
                 <div class="carousel-item"><img src="imagens/carrossel-estudo.png" alt="Estudo Bíblico"><div class="carousel-caption"><h2>Estudos Bíblicos</h2><a href="estudos.html">Acesse os materiais de estudo &rarr;</a></div></div>
                 <div class="carousel-item"><img src="imagens/carrossel-jogo.png" alt="Jogo Conquistando as Coras"><div class="carousel-caption"><h2>Jogo Conquistando as Coras</h2><a href="entretenimento.html">Adquira o jogo de tabuleiro &rarr;</a></div></div>
                 <div class="carousel-item"><img src="imagens/carrossel-inovacoes.png" alt="Dicas e Inovações"><div class="carousel-caption"><h2>Dicas e Inovações</h2><a href="dicas.html">Veja as atualidades do meio &rarr;</a></div></div>
                 <div class="carousel-item"><img src="imagens/carrossel-musical.png" alt="Estudo Musical"><div class="carousel-caption"><h2>Estudo Musical</h2><a href="estudos.html">Canto e Instrumentos musicais &rarr;</a></div></div>
                 <div class="carousel-item"><img src="imagens/carrossel-ministerios.png" alt="Ministérios"><div class="carousel-caption"><h2>Nossos Ministérios</h2><a href="ministerios.html">Conheça as áreas da igreja &rarr;</a></div></div>
+=======
+                <div class="carousel-item"><img src="imagens/carrossel-estudos.png" alt="Estudo Bíblico"><div class="carousel-caption"><h2>Estudos Bíblicos</h2><a href="estudos.html">Acesse os materiais de estudo &rarr;</a></div></div>
+                <div class="carousel-item"><img src="imagens/carrossel-jogo.jpg" alt="Jogo Conquistando as Coras"><div class="carousel-caption"><h2>Jogo Conquistando as Coras</h2><a href="entretenimento.html">Adquira o jogo de tabuleiro &rarr;</a></div></div>
+                <div class="carousel-item"><img src="imagens/carrossel-inovacoes.jpg" alt="Dicas e Inovações"><div class="carousel-caption"><h2>Dicas e Inovações</h2><a href="dicas.html">Veja as atualidades do meio &rarr;</a></div></div>
+                <div class="carousel-item"><img src="imagens/carrossel-musical.jpg" alt="Estudo Musical"><div class="carousel-caption"><h2>Estudo Musical</h2><a href="estudos.html">Canto e Instrumentos musicais &rarr;</a></div></div>
+                <div class="carousel-item"><img src="imagens/carrossel-ministerios.jpg" alt="Ministérios"><div class="carousel-caption"><h2>Nossos Ministérios</h2><a href="ministerios.html">Conheça as áreas da igreja &rarr;</a></div></div>
+>>>>>>> Stashed changes
             </div>
         </div>
         <button class="carousel-btn btn-prev" onclick="moveSlide(-1)">&#10094;</button>
